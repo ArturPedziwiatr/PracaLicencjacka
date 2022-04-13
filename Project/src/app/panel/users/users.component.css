@@ -1,0 +1,28 @@
+#add-success-alert-user,
+#update-success-alert-user,
+#delete-success-alert-user{
+    display: none;
+}
+
+#add-success-alert-user,
+#update-success-alert-user,
+#delete-success-alert-user{
+    animation-name: fadeInAndOut;
+    animation-duration: 3s;
+}
+
+@-webkit-keyframes fadeInAndOut{
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+@keyframes fadeInAndOut{
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+.marg-5{
+    margin-right: 5px !important;
+}

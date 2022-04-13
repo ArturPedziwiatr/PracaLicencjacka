@@ -1,0 +1,45 @@
+.leftAdd{
+    display: block;
+    float: left;
+    width: 65%;
+    height: 240px;
+    margin-bottom: -30px;
+    padding-top: 0.3rem;
+}
+
+.bottomAdd{
+    bottom: 0;
+}
+
+
+.imageEmpl{
+    width: 30%;
+    margin-top: -10px;
+    height: 260px;
+}
+
+.titleEmp{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-bottom: 3px;
+    margin-left: -6px;
+}
+
+.bottomAdd{
+    float: left;
+    width: 800px;
+}
+
+.titleEmpDown{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-bottom: 3px;
+    margin-left: -6px;
+}
+
+.margBottom{
+    margin-bottom: 2px;
+}
+
+.paddUser{
+    padding: 2rem 2rem;  
+}
+

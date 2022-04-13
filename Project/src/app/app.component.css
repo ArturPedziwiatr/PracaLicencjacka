@@ -1,0 +1,68 @@
+.panel{
+    box-sizing: border-box;
+    padding: 0;
+    top: 0;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100vh;
+    width: 100%;
+    background: var(--white);
+    border: 5px solid var(--blue);
+}
+
+
+.menuVertical{
+    margin-left: -2px;
+    position:absolute;
+    height: calc(100% - 5px);
+    width: 20%;
+    background: var(--blue);
+    border-left: 10px solid var(--blue);
+    transition: 0.5s;
+    overflow: auto;
+}
+
+.activity{
+  
+    padding: 15px;
+    float: right;
+    height: 100%;
+    width: 78%;
+    text-decoration: none;
+    overflow-y: auto;
+
+}
+
+.signInBtn{
+    position: absolute;
+    float: right;
+    top: 20px;
+    right: 50px;
+}
+
+.signInBtn button{
+    border: none;
+}
+
+.signInBtn button:hover{
+    margin-top: -5px;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  border-top-right-radius: 15%;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0e446c;
+  -webkit-box-shadow: inset 0 0 6px #0e446c;
+  border-top-right-radius: 15%;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0e446c;
+  -webkit-box-shadow: inset 0 0 6px #0e446c;
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: #0e446c;
+} 

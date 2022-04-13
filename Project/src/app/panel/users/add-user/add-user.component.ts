@@ -1,0 +1,161 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ResponseModel } from 'src/app/model/responseModel';
+import { SharedService } from 'src/app/services/shared.service';
+import { UsersComponent } from '../users.component';
+
+@Component({
+  selector: 'app-add-user',
+  templateUrl: './add-user.component.html',
+  styleUrls: ['./add-user.component.css']
+})
+export class AddUserComponent implements OnInit {
+
+  @Input() usr:any;
+  @Input() status:any;
+
+  public registerForm = this.formBuilder.group({
+    firstName:['asddas',[
+      Validators.required,
+      Validators.pattern("[a-zA-Ząęóżźćś ]*"),
+      Validators.maxLength(30)
+    ]],
+    lastName:['',[
+      Validators.minLength(6),
+      Validators.pattern("[a-zA-Ząęóżźćś ]*"),
+      Validators.maxLength(40)
+    ]],
+    pesel:['',[
+      Validators.required,
+      Validators.pattern("[0-9]*"),
+      Validators.maxLength(11),
+      Validators.minLength(11)
+    ]],
+    sex:['',[
+      Validators.required,
+      Validators.maxLength(1),
+    ]],
+    email:['',[
+      Validators.required,
+      Validators.email,
+    ]],
+    idCard:['',[
+      Validators.required,
+      Validators.pattern("[0-9]*"),
+      Validators.maxLength(6),
+      Validators.minLength(6)
+    ]],
+    passwordR:['',[
+      Validators.required,
+      Validators.minLength(8)
+    ]],
+    password:['',[
+      Validators.minLength(8)
+    ]]
+  })
+
+  id: number|string = "";
+
+  constructor(private service: SharedService, private show: UsersComponent,private formBuilder:FormBuilder) { }
+
+  ngOnInit(): void {
+    this.registerForm.get('firstName').setValue(this.usr.firstName);
+    this.registerForm.get('lastName').setValue(this.usr.lastName);
+    this.registerForm.get('email').setValue(this.usr.email);
+    this.registerForm.get('pesel').setValue(this.usr.pesel);
+    this.registerForm.get('sex').setValue(this.usr.sex);
+    this.registerForm.get('idCard').setValue(this.usr.idCard);
+    this.id = this.usr.id;
+  }
+
+  addUser(){
+    var user = {
+      firstName:this.registerForm.controls["firstName"].value,
+      lastName:this.registerForm.controls["lastName"].value,
+      email:this.registerForm.controls["email"].value,
+      pesel:this.registerForm.controls["pesel"].value,
+      position:"S",
+      sex:this.registerForm.controls["sex"].value,
+      password:this.registerForm.controls["passwordR"].value,
+      idCard:this.registerForm.controls["idCard"].value,
+    }
+    this.service.addUser(user).subscribe((data:any)=>{
+      if(data.responseCode == 1){
+       this.show.ngOnInit();
+       var showAddSucces = document.getElementById('add-success-alert-user');
+       if(showAddSucces){
+         showAddSucces.style.display = "block";
+       }
+       setTimeout(function(){
+         if(showAddSucces){
+           showAddSucces.style.display = "none";
+         }
+       }, 3000);
+      }
+      else if(data.responseCode == 2){
+        alert(data.responseMessage);
+      }
+    });
+    
+  }
+
+  addTeacher(){
+    var user = {
+      firstName:this.registerForm.controls["firstName"].value,
+      lastName:this.registerForm.controls["lastName"].value,
+      email:this.registerForm.controls["email"].value,
+      pesel:this.registerForm.controls["pesel"].value,
+      position:"T",
+      sex:this.registerForm.controls["sex"].value,
+      password:this.registerForm.controls["passwordR"].value,
+      idCard:this.registerForm.controls["idCard"].value,
+    }
+
+    this.service.addUser(user).subscribe((data:any) =>{
+      if(data.responseCode ==1){
+        this.show.ngOnInit();
+        var showAddSucces = document.getElementById('add-success-alert-user');
+        if(showAddSucces){
+          showAddSucces.style.display = "block";
+        }
+        setTimeout(function(){
+          if(showAddSucces){
+            showAddSucces.style.display = "none";
+          }
+        }, 3000);
+      }else if(data.responseCode == 2){
+        alert(data.responseMessage);
+      }
+      
+    })
+  }
+
+
+  editUser(){
+      var user = {
+        firstName:this.registerForm.controls["firstName"].value,
+        lastName:this.registerForm.controls["lastName"].value,
+        email:this.registerForm.controls["email"].value,
+        pesel:this.registerForm.controls["pesel"].value,
+        position:this.usr.position,
+        sex:this.registerForm.controls["sex"].value,
+        password:this.registerForm.controls["password"].value,
+        idCard:this.registerForm.controls["idCard"].value,
+        }
+
+        this.service.updateUser(this.id,user).subscribe(res =>{
+          this.show.ngOnInit();
+          var showAddSucces = document.getElementById('update-success-alert-user');
+          if(showAddSucces){
+            showAddSucces.style.display = "block";
+          }
+          setTimeout(function(){
+            if(showAddSucces){
+              showAddSucces.style.display = "none";
+            }
+          }, 3000);
+        })
+      
+  }
+
+}
