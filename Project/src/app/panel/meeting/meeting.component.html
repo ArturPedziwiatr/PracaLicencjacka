@@ -1,1 +1,83 @@
-<p>meeting works!</p>
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{modalTitle}}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <app-add-meet></app-add-meet>
+      </div>
+    </div>
+  </ng-template>
+
+  <!--<div class="alert alert-success" role="alert" id="add-success-alert-user">
+    Pomyślnie dodano spotkanie
+  </div>
+
+  <div class="alert alert-success" role="alert" id="update-success-alert-user">
+    Pomyślnie zaktualizowano spotkanie
+  </div>
+
+  <div class="alert alert-success" role="alert" id="delete-success-alert-user">
+    Pomyślnie usunięto spotkanie
+  </div>
+  
+  <div class="panelTitle">
+    Lista użytkowników
+  </div>
+  <br>-->
+  <div class="panelTitle">
+    Spotkania
+  </div>
+
+  <button  class="btn btn-outline-primary mb-2 mr-2" 
+  (click)="addMeeting(content)">Dodaj Spotkanie</button>
+
+<table class="table table-striped">
+    <thead>
+        <th>ID</th>
+        <th>Rok</th>
+        <th>M</th>
+        <th>D</th>
+        <th>SH</th>
+        <th>SM</th>
+        <th>EH</th>
+        <th>EM</th>
+        <th>T</th>  
+        <th>D</th>
+        <th>A</th> 
+        <th>Opcje</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of meetingList; let i = index">
+            <td>{{i}}</td>
+            <td>{{item.year}}</td>
+            <td>{{item.month}}</td>
+            <td>{{item.day}}</td>
+            <td>{{item.hourStart}}</td>
+            <td>{{item.minutesStart}}</td>
+            <td>{{item.hourEnd}}</td>
+            <td>{{item.minutesEnd}}</td>
+            <td>{{item.title}}</td>
+            <td>{{item.description}}</td>
+            <td>{{item.isAccepted}}</td>
+            
+            <td>
+                <button type="button" class="btn btn-outline-primary me-2 mb1 "
+                (click)="editClick(content,item)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg>
+                </button>
+                <button type="button" class="btn btn-outline-danger me-2 mb-1"
+                (click)="deleteClick(item)" >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                </svg> 
+                </button>
+                  
+            </td>
+        </tr>
+    </tbody>
+</table>

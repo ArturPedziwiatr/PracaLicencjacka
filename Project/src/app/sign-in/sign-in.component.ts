@@ -3,6 +3,7 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { SharedService } from 'src/app/services/shared.service';
 import { FormBuilder, Validators,} from '@angular/forms';
 import { Constants } from '../auth/constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -22,7 +23,8 @@ export class SignInComponent implements OnInit {
 
   constructor(config: NgbModalConfig, private modal: NgbModal, 
                 private service: SharedService,
-                private formBuilder:FormBuilder) { 
+                private formBuilder:FormBuilder,
+                private router:Router) { 
       config.backdrop = 'static';
       config.keyboard = false;
   }
@@ -40,6 +42,7 @@ export class SignInComponent implements OnInit {
       if(data.responseCode == 1){
         localStorage.setItem(Constants.USER_KEY, JSON.stringify(data.dateSet));
         this.modal.dismissAll();
+        this.router.navigate(["home"]);
       }
       else if (data.responseCode == 2){
         alert("Nie znaleziono uzytkownika");

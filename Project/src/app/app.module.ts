@@ -19,6 +19,8 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { ModalModule } from 'ngb-modal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AddUserComponent } from './panel/users/add-user/add-user.component';
+import { NoPermissionComponent } from './error/noPermission';
+import { AddMeetComponent } from './panel/meeting/add-meet/add-meet.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { AddUserComponent } from './panel/users/add-user/add-user.component';
     HomeComponent,
     UsersComponent,
     SignInComponent,
-    AddUserComponent
+    AddUserComponent,
+    NoPermissionComponent,
+    AddMeetComponent
   ],
   imports: [
     BrowserModule,

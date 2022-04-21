@@ -1,0 +1,181 @@
+<div *ngIf="userPosition == 'S'">
+    <!--Wybieranie nauczyciela - Tworzenie spotkania-->
+    <div *ngIf="screen == 0">
+        <div class="panelTitle">
+            Wybierz nauczyciela
+        </div>
+        <br>
+        
+        <table class="table table-striped">
+            <thead>
+                <th>ID</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Identyfikator</th>
+                <th>Opcje</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of teacherList; let i = index">
+                    <td>{{i}}</td>
+                    <td>{{item.firstName}}</td>
+                    <td>{{item.lastName}}</td>
+                    <td>{{item.idCard}}</td>               
+                    <td>
+                        <button type="button" class="btn btn-outline-primary me-2 mb1 "
+                        (click)="addTeacher(item.id)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        </button>                     
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Uzupełnianie danych - Tworzenie spotkania-->
+    <div *ngIf="screen == 1">
+        <div class="panelTitle">
+            Dane spotkania {{dateStart}}
+        </div>
+        <br>
+        <form [formGroup]="meetingForm" >
+            <div class="col-sm-5">
+                <span class="titleEmpDown">Tytuł spotkania:</span>
+                <input type="text" class="form-control" formControlName="title"
+                placeholder="Temat">
+            </div>
+    
+            <div class="col-sm-6">
+                <span class="titleEmp">Opis:</span>
+                <input type="text" class="form-control" formControlName="description"
+                placeholder="Opis">
+            </div>
+
+            <div class="col-sm-6">
+                <span class="titleEmp">Data:</span>
+                <input type="date" class="form-control" formControlName="date"
+                placeholder="Opis">
+            </div>
+
+            <div class="col-sm-6">
+                <span class="titleEmp">Czas start:</span>
+                <input type="time" class="form-control" formControlName="timeStart"
+                placeholder="Opis">
+            </div>
+
+            <div class="col-sm-6">
+                <span class="titleEmp">Czas koniec:</span>
+                <input type="time" class="form-control" formControlName="timeEnd"
+                placeholder="Opis">
+            </div>
+        </form> 
+
+        <button (click)="addMeetingS()" [disabled]="!meetingForm.valid" class="btn btn-primary">
+            Dodaj
+        </button>
+
+        <button (click)="prevScreen()" class="btn btn-primary">
+            Cofnij
+        </button>
+
+    </div>
+</div>
+<div *ngIf="userPosition == 'T'">
+    <!--Wybieranie studentów - Tworzenie spotkania-->
+    <div *ngIf="screen == 0">
+        <div class="panelTitle">
+            Wybierz studentów 
+        </div>
+        <br>
+        <div class="table-origin">
+            <div class="table-student">
+                <table class="table table-striped">
+                    <thead>
+                        <th>ID</th>
+                        <th>Imię</th>
+                        <th>Nazwisko</th>
+                        <th>Identyfikator</th>
+                        <th>Opcje</th>
+                    </thead>
+                    <tbody *ngFor="let item of studentList; let i = index">
+                            <tr > 
+                                <td>{{i}}</td>
+                                <td>{{item.firstName}}</td>
+                                <td>{{item.lastName}}</td>
+                                <td>{{item.idCard}}</td>               
+                                <td>
+                                    <button type="button" class="btn btn-outline-primary me-2 mb1 "
+                                    (click)="addStudent(item)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                    </svg>
+                                    </button>                     
+                                </td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-teacher">
+                <div class="table-teacher-heder">
+                    Lista dodanych studentów
+                </div>
+                <div class="table-teacher-body" *ngFor="let item of idList; let i = index">
+                    {{i + ". " +item.firstName + " " + item.lastName}}
+                </div>
+            </div>
+        </div>
+        <br>
+        <button (click)="nextScreen()" class="btn btn-primary">
+            Następny krok
+        </button>
+    </div>
+    <!--Uzupełnianie danych - Tworzenie spotkania-->
+    <div *ngIf="screen == 1">
+        <div class="panelTitle">
+            Dane spotkania {{dateStart}}
+        </div>
+        <br>
+        <form [formGroup]="meetingForm" >
+            <div class="col-sm-5">
+                <span class="titleEmpDown">Tytuł spotkania:</span>
+                <input type="text" class="form-control" formControlName="title"
+                placeholder="Temat">
+            </div>
+    
+            <div class="col-sm-6">
+                <span class="titleEmp">Opis:</span>
+                <input type="text" class="form-control" formControlName="description"
+                placeholder="Opis">
+            </div>
+
+            <div class="col-sm-6">
+                <span class="titleEmp">Data:</span>
+                <input type="date" class="form-control" formControlName="date"
+                placeholder="Opis">
+            </div>
+
+            <div class="col-sm-6">
+                <span class="titleEmp">Czas start:</span>
+                <input type="time" class="form-control" formControlName="timeStart"
+                placeholder="Opis">
+            </div>
+
+            <div class="col-sm-6">
+                <span class="titleEmp">Czas koniec:</span>
+                <input type="time" class="form-control" formControlName="timeEnd"
+                placeholder="Opis">
+            </div>
+        </form> 
+
+        <button (click)="addMeetingT()" [disabled]="!meetingForm.valid" class="btn btn-primary">
+            Dodaj
+        </button>
+
+        <button (click)="prevScreen()" class="btn btn-primary">
+            Cofnij
+        </button>
+    </div>
+</div>

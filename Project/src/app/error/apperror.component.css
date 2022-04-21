@@ -1,0 +1,31 @@
+.iconNoPermission{
+    margin-top: 180px;
+    margin-left: 80px;
+    height: 30% !important;
+    width: 30% !important;
+    float: left;
+}
+
+.titleNoPermision{
+    margin-top: 200px;
+    margin-right: 3%;
+    width: 60%;
+    float: right;
+}
+
+.titleNoPermision a{
+    text-align: center;
+    font-family: 'webFont', sans-serif;
+    font-size: clamp(100%, 6rem + 2vw, 90px);
+    color: black;
+}
+
+.titleNoPermision h1{
+    font-size: 20px;
+}
+
+.loginBox{
+    margin-right: 40%;
+    width: 60%;
+    float: right;
+}

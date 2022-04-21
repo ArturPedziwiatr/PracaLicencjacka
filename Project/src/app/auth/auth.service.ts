@@ -13,7 +13,7 @@ export class AuthService implements CanActivate{
      const user = JSON.parse(localStorage.getItem(Constants.USER_KEY)) as User;
     if(user && user.email) return true
     else {
-      this.router.navigate(["login"]);
+      this.router.navigate(["noPermission"]);
       return false;
     }
   }
