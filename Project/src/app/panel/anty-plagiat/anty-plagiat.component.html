@@ -1,1 +1,54 @@
-<p>anty-plagiat works!</p>
+<div class="container-primal">
+    <ng-template #content let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Antyplagiat</h4>
+          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <app-show-text [text]="text"></app-show-text>
+          </div>
+        </div>
+    </ng-template>
+
+    <div class="panelTitle">
+        System Anty-plagiatowy
+    </div>
+   
+    
+   <div class="allItem">
+        <div class="dropzoneSize">
+            <ngx-dropzone (change)="onSelect($event)" accept="text/*, application/pdf, .sql" class="sizeDrop">
+                <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label>
+                  <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                    <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                </ngx-dropzone-preview>
+            </ngx-dropzone>
+        </div>
+        <div>
+            <button (click)="antyPlagiatSystem()" [disabled]="!ifActive()" 
+            class="btn btn-primary butonZone">Antyplagiat</button>
+        </div>
+    </div>
+    <div class="container-file" *ngIf="files.length>0">
+        <div *ngFor="let f of files" class="file-code">
+            <svg xmlns="http://www.w3.org/2000/svg" width="80%" height="60%" fill="black" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
+                <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V5.5zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+            </svg>
+            <div class="file-text">
+               {{"Nazwa:" + f.name }} 
+               <br>
+               <br>
+               {{"Rodzaj: " + f.type }}
+               <br>
+               <br>
+               {{"Rozmiar:  " + f.size + " B"}} 
+            </div>
+        </div>
+        <div class="container-button" *ngIf="active">
+            <button  class="btn btn-outline-primary mb-2 mr-2" 
+            (click)="buttonPlagiat(content)">Podgląd prac </button>
+        </div>
+    </div>  
+</div>

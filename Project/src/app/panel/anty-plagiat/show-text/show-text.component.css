@@ -1,0 +1,38 @@
+.word{
+    float: left;
+    width: auto;
+    margin-right: 1rem;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: black;
+}
+
+.sameWord{
+    float: left;
+    width: auto;
+    margin-right: 1rem;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    color: red;
+}
+
+.left-container{
+    word-wrap: break-word;
+    float: left;
+    width: 48%;
+    padding: 0.5rem;
+    border: 3px dashed var(--blue);
+}
+
+.right-container{
+    word-wrap: break-word;
+    float: right;
+    width: 48%;
+    padding: 0.5rem;
+    border: 3px dashed var(--blue);
+}
+
+.main-container-text{
+    height: 600px;
+    overflow-y: auto;
+}
+

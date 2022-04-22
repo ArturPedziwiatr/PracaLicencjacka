@@ -1,0 +1,12 @@
+<div class="main-container-text">
+    <div class="left-container">
+        <div *ngFor="let word of textOne" [ngClass]="{'word': findWord(word)===false, 'sameWord':findWord(word)===true}">
+            <a>{{word}}</a>
+        </div>    
+    </div>
+    <div class="right-container">
+        <div *ngFor="let word of textSecond" [ngClass]="{'word': findWord(word)===false, 'sameWord':findWord(word)===true}">
+            {{word}}
+        </div>
+    </div>
+</div>

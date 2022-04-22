@@ -21,6 +21,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AddUserComponent } from './panel/users/add-user/add-user.component';
 import { NoPermissionComponent } from './error/noPermission';
 import { AddMeetComponent } from './panel/meeting/add-meet/add-meet.component';
+import { NgxDropzoneModule } from 'ngx-dropzone';
+import { ShowTextComponent } from './panel/anty-plagiat/show-text/show-text.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { AddMeetComponent } from './panel/meeting/add-meet/add-meet.component';
     SignInComponent,
     AddUserComponent,
     NoPermissionComponent,
-    AddMeetComponent
+    AddMeetComponent,
+    ShowTextComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,7 +48,8 @@ import { AddMeetComponent } from './panel/meeting/add-meet/add-meet.component';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ModalModule,
-    NgbModule
+    NgbModule,
+    NgxDropzoneModule
   ],
   providers: [SharedService],
   bootstrap: [AppComponent]

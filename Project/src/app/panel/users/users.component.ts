@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation  } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { SharedService } from 'src/app/services/shared.service';
-import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user';
 
 @Component({
