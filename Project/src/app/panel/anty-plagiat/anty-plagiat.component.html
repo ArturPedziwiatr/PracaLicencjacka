@@ -1,4 +1,4 @@
-<div class="container-primal">
+<div class="container-primal" *ngIf="getPosition() == 'T' || getPosition() == 'A'">
     <ng-template #content let-modal>
         <div class="modal-header">
           <h4 class="modal-title" id="modal-basic-title">Antyplagiat</h4>
@@ -46,9 +46,13 @@
                {{"Rozmiar:  " + f.size + " B"}} 
             </div>
         </div>
+        <div class="preloader" id="loader"></div>
         <div class="container-button" *ngIf="active">
             <button  class="btn btn-outline-primary mb-2 mr-2" 
             (click)="buttonPlagiat(content)">Podgląd prac </button>
         </div>
     </div>  
+</div>
+<div *ngIf="getPosition() != 'S' || getPosition() != 'A'">
+
 </div>

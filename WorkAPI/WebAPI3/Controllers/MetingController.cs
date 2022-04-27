@@ -33,18 +33,21 @@ namespace WebAPI3.Controllers
         }
 
         [HttpGet("{id}/{position}")]
-        public async Task<ResponseModel> GetMeting(int id, string position)
+        public async Task<ResponseModel> GetMeting(string id, string position)
         {
-            if(position == "T")
+            var connector = (from m in _context.Meting
+                            join c in _context.Connectors on m.Id.ToString() equals c.IdMessage
+                            select new { m.Id,c.IdTeacher,c.IdStudent,m.Title,m.Description,m.DateStart,m.DateEnd,m.isAccepted,m.isEnd}).ToList();
+            if (position == "T")
             {
-                var metings = _context.Meting.Where(x => x.IdTeacher == id);
+                connector = connector.Where(x => x.IdTeacher == id).ToList();
 
-                if (metings == null)
+                if (connector == null)
                     return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Nie znaleziono spotkań", null));
 
                 try
                 {
-                    return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Ładowanie listy", metings));
+                    return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Ładowanie listy", connector));
                 }
                 catch (Exception ex)
                 {
@@ -53,14 +56,14 @@ namespace WebAPI3.Controllers
             }
             else
             {
-                var metings = _context.Meting.Where(x => x.IdStudent == id);
+                connector = connector.Where(x => x.IdStudent == Int32.Parse(id)).ToList();
 
-                if (metings == null)
+                if (connector == null)
                     return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Nie znaleziono spotkań", null));
 
                 try
                 {
-                    return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Ładowanie listy", metings));
+                    return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Ładowanie listy", connector));
                 }
                 catch (Exception ex)
                 {
@@ -70,9 +73,9 @@ namespace WebAPI3.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ResponseModel> PutMeting(int id, [FromBody] PutMeeting model)
+        public async Task<ResponseModel> PutMeting(string id,[FromBody] PutMeeting model)
         {
-            var meetUpdate = _context.Meting.FirstOrDefault(x => x.Id == id);
+            var meetUpdate = _context.Meting.FirstOrDefault(x => x.Id.ToString() == id);
             if (meetUpdate != null)
             {
                 meetUpdate.Title = model.Title;
@@ -99,8 +102,6 @@ namespace WebAPI3.Controllers
         {
 
             Metings meting = new Metings();
-            meting.IdTeacher = model.IdTeacher;
-            meting.IdStudent = model.IdStudent;
             meting.Title = model.Title;
             meting.Description = model.Description;
             meting.DateStart = model.DateStart;
@@ -111,7 +112,7 @@ namespace WebAPI3.Controllers
             {
                 _context.Meting.Add(meting);
                 await _context.SaveChangesAsync();
-                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Spotkanie zostało dodane", null));
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Spotkanie zostało dodane", meting));
             }
             catch (Exception ex)
             {
@@ -120,16 +121,21 @@ namespace WebAPI3.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ResponseModel> DeleteMeting(int id)
+        public async Task<ResponseModel> DeleteMeting(Guid id)
         {
             var meet = await _context.Meting.FindAsync(id);
+            var connector = _context.Connectors.Where(connector => connector.IdMessage == id.ToString()).ToList();
             if (meet == null)
             {
                 return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Wydarzenie nie zostało znalezione", null));
             }
-
             try
             {
+                foreach (var obj in connector)
+                {
+                    _context.Connectors.Remove(obj);
+                    await _context.SaveChangesAsync();
+                }
                 _context.Meting.Remove(meet);
                 await _context.SaveChangesAsync();
                 return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Wydarzenie zostało usunięte", null));
@@ -141,9 +147,9 @@ namespace WebAPI3.Controllers
         }
 
         [HttpPut("isAccepted/{id}")]
-        public async Task<ResponseModel> ChangeIsAccepted(int id)
+        public async Task<ResponseModel> ChangeIsAccepted(string id)
         {
-            var meetUpdate = _context.Meting.FirstOrDefault(x => x.Id == id);
+            var meetUpdate = _context.Meting.FirstOrDefault(x => x.Id.ToString() == id);
             if (meetUpdate != null)
                 meetUpdate.isAccepted = !meetUpdate.isAccepted;
             else
@@ -161,9 +167,9 @@ namespace WebAPI3.Controllers
         }
 
         [HttpPut("isEnd/{id}")]
-        public async Task<ResponseModel> ChangeIsEnd(int id)
+        public async Task<ResponseModel> ChangeIsEnd(string id)
         {
-            var meetUpdate = _context.Meting.FirstOrDefault(x => x.Id == id);
+            var meetUpdate = _context.Meting.FirstOrDefault(x => x.Id.ToString() == id);
             if (meetUpdate != null)
                 meetUpdate.isEnd = true;
             else

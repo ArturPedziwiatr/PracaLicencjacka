@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { getuid } from 'process';
 import { ResponseModel } from 'src/app/model/responseModel';
 import { SharedService } from 'src/app/services/shared.service';
 import { UsersComponent } from '../users.component';
@@ -13,16 +14,19 @@ export class AddUserComponent implements OnInit {
 
   @Input() usr:any;
   @Input() status:any;
+  photoFile:string = 'undefinded.png';
+  PhotoFilePath:string = '';
+  statusEdit:number=0;
 
   public registerForm = this.formBuilder.group({
     firstName:['asddas',[
       Validators.required,
-      Validators.pattern("[a-zA-Ząęóżźćś ]*"),
+      Validators.pattern("[a-zA-ZąęóżźćśłŁńŃĄŚĆĘŻŹÓ ]*"),
       Validators.maxLength(30)
     ]],
     lastName:['',[
       Validators.minLength(6),
-      Validators.pattern("[a-zA-Ząęóżźćś ]*"),
+      Validators.pattern("[a-zA-ZąęóżźćśłŁńŃĄŚĆĘŻŹÓ ]*"),
       Validators.maxLength(40)
     ]],
     pesel:['',[
@@ -59,17 +63,53 @@ export class AddUserComponent implements OnInit {
   constructor(private service: SharedService, private show: UsersComponent,private formBuilder:FormBuilder) { }
 
   ngOnInit(): void {
-    this.registerForm.get('firstName').setValue(this.usr.firstName);
-    this.registerForm.get('lastName').setValue(this.usr.lastName);
-    this.registerForm.get('email').setValue(this.usr.email);
-    this.registerForm.get('pesel').setValue(this.usr.pesel);
-    this.registerForm.get('sex').setValue(this.usr.sex);
-    this.registerForm.get('idCard').setValue(this.usr.idCard);
-    this.id = this.usr.id;
+    if(this.statusEdit == 0){
+      this.registerForm.get('firstName').setValue(this.usr.firstName);
+      this.registerForm.get('lastName').setValue(this.usr.lastName);
+      this.registerForm.get('email').setValue(this.usr.email);
+      this.registerForm.get('pesel').setValue(this.usr.pesel);
+      this.registerForm.get('sex').setValue(this.usr.sex);
+      this.registerForm.get('idCard').setValue(this.usr.idCard);
+      this.id = this.usr.id;
+      if(this.status == 3) this.photoFile = this.usr.photoFile;
+      this.PhotoFilePath = this.service.PhotoUrl + this.photoFile;
+    }
+    else{
+      if(this.status == 3) this.photoFile = this.usr.photoFile;
+      this.PhotoFilePath = this.service.PhotoUrl + this.photoFile;
+      this.statusEdit = 0;
+    }
+  }
+
+  uploadPhoto(event:any){
+    var file = event.target.files[0];
+    const formData:FormData = new FormData();
+    formData.append('uploadedFile',file,file.name);
+
+    this.service.UploadPhoto(formData).subscribe((data:any)=>{
+      if(data.responseCode == 1){
+        this.photoFile = data.dateSet;
+        this.ngOnInit();
+      }
+      else if(data.responseCode == 2) alert(data.responseMessage);
+      else alert("Błąd bazy");
+    });
+  }
+
+  changePhoto(value:any){
+    if( this.photoFile == "woman.png" ||  this.photoFile == "man.png" ||  this.photoFile == "undefinded.png"){
+      if(value == "K") this.photoFile = "woman.png";
+      else if(value == "M") this.photoFile = "man.png";
+      else this.photoFile = "undefinded.png";
+      this.statusEdit=1;
+      this.ngOnInit();
+    }      
+
   }
 
   addUser(){
     var user = {
+      photoFile: this.photoFile,
       firstName:this.registerForm.controls["firstName"].value,
       lastName:this.registerForm.controls["lastName"].value,
       email:this.registerForm.controls["email"].value,
@@ -101,6 +141,7 @@ export class AddUserComponent implements OnInit {
 
   addTeacher(){
     var user = {
+      photoFile: this.photoFile,
       firstName:this.registerForm.controls["firstName"].value,
       lastName:this.registerForm.controls["lastName"].value,
       email:this.registerForm.controls["email"].value,
@@ -154,8 +195,6 @@ export class AddUserComponent implements OnInit {
               showAddSucces.style.display = "none";
             }
           }, 3000);
-        })
-      
+        }) 
   }
-
 }

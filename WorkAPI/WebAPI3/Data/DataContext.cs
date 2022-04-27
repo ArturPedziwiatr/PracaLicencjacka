@@ -15,5 +15,7 @@ namespace WebAPI3.Data
         public DbSet<Teachers> Teacher { get; set; }
 
         public DbSet<Metings> Meting { get; set; }
+
+        public DbSet<MeetConnector> Connectors { get; set; }
     }
 }

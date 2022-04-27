@@ -12,7 +12,7 @@ using WebAPI3.Data;
 namespace WebAPI3.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220420111729_initialMigrations")]
+    [Migration("20220427171052_initialMigrations")]
     partial class initialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,11 @@ namespace WebAPI3.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
+                    b.Property<string>("PhotoFile")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Position")
                         .IsRequired()
                         .HasMaxLength(1)
@@ -86,6 +91,30 @@ namespace WebAPI3.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("WebAPI3.Models.MeetConnector", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("IdMessage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdStudent")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IdTeacher")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Connectors");
                 });
 
             modelBuilder.Entity("WebAPI3.Models.Teachers", b =>
@@ -121,11 +150,9 @@ namespace WebAPI3.Migrations
 
             modelBuilder.Entity("WorkAPI.Model.Metings", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateEnd")
                         .HasColumnType("datetime2");
@@ -136,12 +163,6 @@ namespace WebAPI3.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IdStudent")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdTeacher")
-                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()

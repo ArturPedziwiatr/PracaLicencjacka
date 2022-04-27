@@ -1,1 +1,48 @@
-<p>teachers works!</p>
+<div *ngIf="getPosition() == 'S' || getPosition() == 'A'">
+    <div class="panelTitle">
+        Lista studentów
+    </div>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row">
+          <div class="search-container">
+            <input type="text" name="search" [(ngModel)]="searchText" placeholder="Wyszukuj" class="searchBox">
+          </div>
+        </div>
+      </div>
+    <button class="teacher-container" *ngFor="let teacher of teacherList | filter:searchText">
+        <img [src]="PhotoFilePath + teacher.photoFile" class="teacher-image" >
+
+        <div class="teacher-date">
+            <div class="panelTitle">Dane Nauczyciela</div>
+            <div class="container-word"> 
+                <div class="container-name"><h1>Imię i nazwisko:</h1>{{teacher.title + " " + teacher.firstName + " " + teacher.lastName}}</div>    
+                <div class="container-name"><h1>Email:</h1>{{teacher.email}}</div> 
+                <div class="container-name"><h1>Płeć:</h1>{{getSex(teacher.sex)}}</div>                 
+            </div>
+        </div>
+        <div></div>
+        <div class="container-word-hidden">
+            <div class="panelTitle">Dane Nauczyciela</div>
+            <div class="container-name"><h1>Imię i nazwisko:</h1>{{teacher.title + " " + teacher.firstName + " " + teacher.lastName}}</div>    
+            <div class="container-name"><h1>Email:</h1>{{teacher.email}}</div> 
+            <div class="container-name"><h1>Płeć:</h1>{{getSex(teacher.sex)}}</div> 
+            <div class="container-second">
+                <div *ngIf="!getValue(teacher.side)" class="container-name"><h1>Strona:</h1>{{teacher.side}}</div> 
+                <div *ngIf="!getValue(teacher.phone)" class="container-name"><h1>Telefon:</h1>{{teacher.phone}}</div> 
+            </div>
+            <h2>Opis:</h2>
+            <div *ngIf="!getValue(teacher.description)" class="container-describe">
+                {{teacher.description}}
+            </div> 
+            <div *ngIf="getValue(teacher.description)" class="container-describe">
+                <h3>Brak opisu</h3>
+            </div> 
+        </div>
+    </button>
+    
+</div>
+<div *ngIf="getPosition() != 'S' || getPosition() != 'A'">
+
+</div>

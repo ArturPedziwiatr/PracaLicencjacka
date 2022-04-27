@@ -1,0 +1,131 @@
+<div class="alert alert-success" role="alert" id="update-success">
+{{textMessage}}
+</div>
+
+<div class="alert alert-danger" role="alert" id="update-fail">
+    {{textMessage}}
+</div>
+
+<div>
+    <div id="main-container">
+       
+        <div class="first-date-container">
+            <div class="ml-3 bd-highlight imageUpload" >
+                <img [src]="PhotoFilePath" height="90%" width="100%">
+                <input type="file" (change)="uploadPhoto($event)" />
+            </div>
+        </div>
+
+        <div class="main-style-container">
+            <form [formGroup]="userForm" >
+                <div class="container-simple-date">
+                    <div class="panelTitle settingTitle">
+                        Dane podstawowe
+                    </div>  
+                    
+                    <div class="col-sm-2 left-move">
+                        <span class="titleEmpDown">Imię:</span>
+                        <input type="text" class="form-control" formControlName="firstName">
+                    </div>
+            
+                    <div class="col-sm-3 left-move">
+                        <span class="titleEmpDown">Nazwisko:</span>
+                        <input type="text" class="form-control" formControlName="lastName">
+                    </div>
+
+                    <div class="col-sm-4 left-move">
+                        <span class="titleEmpDown">Email:</span>
+                        <input type="text" class="form-control" formControlName="email">
+                    </div>
+                    
+                    <div class="col-sm-2 left-move">
+                        <span class="titleEmp">Płeć:</span>
+                        <select type="text" class="form-control" formControlName="sex">
+                            <option value="K"  checked >Kobieta</option>
+                            <option value="M">Mężczyzna</option>
+                            <option value="U">Inna</option>
+                        </select>
+                    </div>
+                    <button (click)="editUser()" [disabled]="!userForm.valid"  class="btn btn-primary button-bottom">
+                        Edytuj dane
+                    </button> 
+                </div>  
+            </form>  
+        </div>
+
+        <div class="space"></div>
+
+        <div class="main-style-container" *ngIf="user.position == 'T'">
+            <form [formGroup]="userForm" >
+                <div class="container-simple-date">
+                    <div class="panelTitle settingTitle">
+                        Dane nauczyciela
+                    </div>  
+                    
+                    <div class="col-sm-2 left-move">
+                        <span class="titleEmpDown">Tytuł:</span>
+                        <input type="text" class="form-control" formControlName="title">
+                    </div>
+            
+                    <div class="col-sm-2 left-move">
+                        <span class="titleEmpDown">Telefon:</span>
+                        <input type="text" class="form-control" formControlName="phone">
+                    </div>
+                    
+                    <div class="col-sm-3 left-move">
+                        <span class="titleEmpDown">Strona:</span>
+                        <input type="text" class="form-control" formControlName="side">
+                    </div>
+
+                    <div class="col-sm-6 left-move">
+                        <span class="titleEmpDown">Opis:</span>
+                        <textarea class="form-control" formControlName="description" rows="3"></textarea>
+                    </div>
+
+                    <button (click)="editTeacher()" [disabled]="!userForm.valid"  class="btn btn-primary button-bottom">
+                        Edytuj dane
+                    </button> 
+                </div>  
+            </form>  
+        </div>
+
+        <div class="space"></div>      
+    </div>
+
+    <div class="password-style-container">
+        <div class="container-simple-date">
+            <div class="panelTitle settingTitle">
+                Zmiana hasła
+            </div>  
+
+            <form [formGroup]="passwordForm" >                
+                <div class="col-sm-4 left-move">
+                    <span class="titleEmpDown">Stare hasło:</span>
+                    <input type="text" class="form-control" formControlName="passwordOld">
+                </div>
+
+                <div class="col-sm-4 left-move">
+                    <span class="titleEmpDown">Nowe hasło:</span>
+                    <input type="text" class="form-control" formControlName="password">
+                </div>
+
+                <div class="col-sm-4 left-move">
+                    <span class="titleEmpDown">Powtórz stare hasło:</span>
+                    <input type="text" class="form-control" formControlName="passwordOldSecond">
+                </div>
+
+                <div class="col-sm-4 left-move">
+                    <span class="titleEmpDown">Powtórz nowe hasło:</span>
+                    <input type="text" class="form-control" formControlName="passwordSecond">
+                </div>
+
+                <button (click)="changePassword()" [disabled]="!isActive()"  class="btn btn-primary ">
+                    Zmień hasło
+                </button> 
+            </form>  
+        </div>
+    </div>
+</div> 
+<div>
+
+</div>

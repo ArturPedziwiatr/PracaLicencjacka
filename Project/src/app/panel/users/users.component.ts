@@ -18,6 +18,7 @@ export class UsersComponent implements OnInit {
 
   usersList:User[]=[];
   modalTitle: string = '';
+  searchText:string = '';
   status = 0;  //1-addUser 2-addTeacher 3-editUser 4-editTeacher
   usr:any;
 
@@ -30,6 +31,7 @@ export class UsersComponent implements OnInit {
 
   addUser(content: any){
     this.usr={
+      photoFile:"undefinded.png",
       firstName:'',
       lastName:'',
       email:'',
@@ -46,6 +48,7 @@ export class UsersComponent implements OnInit {
 
   addTeacher(content: any){
     this.usr={
+      photoFile:"undefinded.png",
       firstName:'',
       lastName:'',
       email:'',
@@ -66,6 +69,7 @@ export class UsersComponent implements OnInit {
       this.modalTitle="Edytuj użytkownika";
       this.usr = {
         id:item.id,
+        photoFile:item.photoFile,
         firstName:item.firstName,
         lastName:item.lastName,
         email:item.email,

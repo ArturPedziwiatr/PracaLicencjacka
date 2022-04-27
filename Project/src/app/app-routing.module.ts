@@ -9,11 +9,13 @@ import { UsersComponent } from './panel/users/users.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { AuthService } from './auth/auth.service';
 import { NoPermissionComponent } from './error/noPermission';
+import { SettingComponent } from './panel/setting/setting.component';
 
 const routes: Routes = [
   {path: 'home', component:HomeComponent},
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: 'student',  component: StudentsComponent, canActivate:[AuthService], },
+  {path: 'setting',  component: SettingComponent, canActivate:[AuthService], },
   {path: 'teacher',  component: TeachersComponent, canActivate:[AuthService] },
   {path: 'users',  component: UsersComponent, canActivate:[AuthService]},
   {path: 'meeting', component: MeetingComponent, canActivate:[AuthService] },

@@ -32,6 +32,7 @@ namespace WebAPI3.Controllers
                            select new
                            {
                                u.Id,
+                               u.PhotoFile,
                                u.FirstName,
                                u.LastName,
                                u.Email,
@@ -69,51 +70,48 @@ namespace WebAPI3.Controllers
             }
         }
 
-        /*// GET: api/Teachers/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Teachers>> GetTeachers(int id)
-        {
-            var teachers = await _context.Teacher.FindAsync(id);
-
-            if (teachers == null)
-            {
-                return NotFound();
-            }
-
-            return teachers;
-        }
-
-        // PUT: api/Teachers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTeachers(int id, Teachers teachers)
+        public async Task<ResponseModel> PutTeachers(string id, Teachers model)
         {
-            if (id != teachers.Id)
+            var teacherUser = _context.Teacher.FirstOrDefault(x => x.Id.ToString() == id);
+            if (teacherUser != null)
             {
-                return BadRequest();
+                teacherUser.Title = model.Title;
+                teacherUser.Description = model.Description;
+                teacherUser.Side = model.Side;
+                teacherUser.Phone = model.Phone;
             }
-
-            _context.Entry(teachers).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Zaktualizowano użytkownika", null));
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-               /* if (!TeachersExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
             }
 
-            return NoContent();
         }
 
+        [HttpGet("{id}")]
+        public async Task<ResponseModel> GetTeachers(int id)
+        {
+            try
+            {
+                var user = await _context.User.FindAsync(id);
+                var teacher = await _context.Teacher.FindAsync(user.Teacher); 
+                var res = new TeacherSetting(user.Id, user.FirstName, user.LastName, user.Position, user.Sex, user.Email,
+                    user.PhotoFile, teacher.Id.ToString(), teacher.Title, teacher.Description, teacher.Phone, teacher.Side);
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Ładowanie listy", res));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+            }
+        }
+
+        /*// PUT: api/Teachers/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         
         [HttpPost]
         public async Task<ResponseModel> PostTeachers(TeachersDto model)

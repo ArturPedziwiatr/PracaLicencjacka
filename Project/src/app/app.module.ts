@@ -23,6 +23,8 @@ import { NoPermissionComponent } from './error/noPermission';
 import { AddMeetComponent } from './panel/meeting/add-meet/add-meet.component';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { ShowTextComponent } from './panel/anty-plagiat/show-text/show-text.component';
+import { SettingComponent } from './panel/setting/setting.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,7 @@ import { ShowTextComponent } from './panel/anty-plagiat/show-text/show-text.comp
     NoPermissionComponent,
     AddMeetComponent,
     ShowTextComponent,
+    SettingComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,8 @@ import { ShowTextComponent } from './panel/anty-plagiat/show-text/show-text.comp
     BrowserAnimationsModule,
     ModalModule,
     NgbModule,
-    NgxDropzoneModule
+    NgxDropzoneModule,
+    Ng2SearchPipeModule
   ],
   providers: [SharedService],
   bootstrap: [AppComponent]

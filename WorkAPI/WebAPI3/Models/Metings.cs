@@ -5,11 +5,7 @@ namespace WorkAPI.Model
     public class Metings 
     {
         [Key]
-        public int Id { get; set; }
-        [Required]
-        public int IdTeacher { get; set; }
-        [Required]
-        public int IdStudent { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         [Required]
         public string Title { get; set; }
         public string Description { get; set; } = string.Empty;

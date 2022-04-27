@@ -1,0 +1,98 @@
+
+#main-container{
+    display: block;
+    margin-top: 2rem;
+    width: 90%;
+    height: auto;
+}
+
+.first-date-container{
+    display: inline;
+}
+
+.imageUpload{
+    float: right;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    height: 80%;
+    width: 25%;
+    border: 3px dotted var(--blue);
+}
+
+.main-style-container{
+    display: inline;
+    width: 90%;
+    height: auto;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+
+.container-simple-date{
+    display: inline;
+    float: left;
+    height: auto;
+    width: 65%;
+    max-width: 50rem;
+    box-shadow: 5px 5px 10px;
+    border: 3px solid var(--blue);
+    padding: 1rem !important;
+}
+
+.left-move{
+    float: left;
+    margin-right: 1rem;
+}
+
+.space{
+    float: left;
+    width: 60%;
+    height: 2rem;
+}
+
+.button-bottom{
+    float: right;
+    width: 30% !important;
+    min-width: 8rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-top: 3%;
+}
+
+.settingTitle{
+    margin-top: -1%;
+    margin-bottom: 1rem;
+    font-size: 240% !important;
+    text-align: left !important;
+}
+
+.password-style-container{
+    display: inline;
+    width: 190%;
+    height: auto;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+
+#update-success,
+#update-fail{
+    display: none;
+}
+
+#update-success,
+#update-fail{
+    animation-name: fadeInAndOut;
+    animation-duration: 3s;
+}
+
+@-webkit-keyframes fadeInAndOut{
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+@keyframes fadeInAndOut{
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}

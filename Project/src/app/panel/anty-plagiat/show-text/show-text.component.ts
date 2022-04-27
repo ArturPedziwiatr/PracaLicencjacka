@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AntyPlagiatComponent } from '../anty-plagiat.component';
 
 @Component({
   selector: 'app-show-text',
@@ -14,7 +15,7 @@ export class ShowTextComponent implements OnInit {
   textSecond:string[] = [];
   matrix: Array<string> = [];
 
-  constructor() { }
+  constructor(private show:AntyPlagiatComponent) { }
 
   ngOnInit(): void {
     this.addWorld();

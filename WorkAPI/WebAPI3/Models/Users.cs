@@ -8,8 +8,9 @@ namespace WebAPI.Models
         
         public int Id { get; set; }
 
-        /*[Column(TypeName = "nvarchar(100)")]
-        public string PhotoFile { get; set; } = string.Empty;*/
+        [StringLength(100)]
+        [Required]
+        public string PhotoFile { get; set; } = string.Empty;
 
         [StringLength(50)]
         [Required]

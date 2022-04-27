@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using WebAPI3.Data;
 
 var myAllowSpecificOrigins = "_myAllowCpecificOrigins";
@@ -37,6 +38,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(),"Photos")),
+    RequestPath="/Photos"
+});
 
 app.UseHttpsRedirection();
 

@@ -1,13 +1,31 @@
-<div>
+<div *ngIf="getPosition() == 'T' || getPosition() == 'A'">
     <div class="panelTitle">
         Lista studentów
     </div>
     <br>
     <br>
-    <div class="student-container" *ngFor="let student of studentList">
-        <div>
-
+    <div class="container">
+        <div class="row">
+          <div class="search-container">
+            <input type="text" name="search" [(ngModel)]="searchText" placeholder="Wyszukuj" class="searchBox">
+          </div>
         </div>
-        
+      </div>
+    <div class="student-container" *ngFor="let student of studentList | filter:searchText">
+        <div class="student-image">
+            <img [src]="PhotoFilePath + student.photoFile" height="100%" width="100%" >
+        </div>
+        <div class="student-date">
+            <div class="panelTitle small-version">Dane studenta</div>
+            <div class="container-word">
+                <div class="container-name"><h1>Imię i nazwisko:</h1>{{student.firstName + " " + student.lastName}}</div>    
+                <div class="container-name"><h1>Email:</h1>{{student.email}}</div>
+                <div class="container-name"><h1>Numer albumu:</h1>{{student.idCard}}</div>   
+                <div class="container-name"><h1>Płeć:</h1>{{getSex(student.sex)}}</div>   
+            </div>
+        </div>
     </div>
+</div>
+<div *ngIf="getPosition() != 'S' || getPosition() != 'A'">
+
 </div>

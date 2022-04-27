@@ -31,6 +31,8 @@ export class AntyPlagiatComponent implements OnInit {
 	}
 
 	onRemove(event:any) {
+    this.active = false;
+    this.text.splice(0,2);
 		this.files.splice(this.files.indexOf(event), 1);
 	}
 
@@ -40,10 +42,28 @@ export class AntyPlagiatComponent implements OnInit {
   }
 
   antyPlagiatSystem(){
+    this.startLoader();
+    
+
     this.active = true;
     for(let f of this.files){
       this.addText(f);
     }
+
+    this.stopLoader();
+  }
+
+  startLoader(){
+    var showAddSucces = document.getElementById('loader');
+    if(showAddSucces)
+      showAddSucces.style.display = "inline";
+  }
+
+  stopLoader(){
+    setTimeout(this.stopLoader, 400);
+    var showAddSucces = document.getElementById('loader');
+    if(showAddSucces)
+      showAddSucces.style.display = "none";
   }
 
   addText(file:File){
@@ -56,5 +76,10 @@ export class AntyPlagiatComponent implements OnInit {
 
   buttonPlagiat(content: any){
     this.modal.open(content, { centered: true, size: 'xl' });
+  }
+
+  getPosition(){
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+    return user.position;
   }
 }

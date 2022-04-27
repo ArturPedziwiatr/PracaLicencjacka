@@ -18,11 +18,13 @@ namespace WebAPI3.Controllers
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _env;
 
-        public UsersController(DataContext context, IConfiguration configuration)
+        public UsersController(DataContext context, IConfiguration configuration, IWebHostEnvironment env)
         {
             _configuration = configuration;
             _context = context;
+            _env = env;
         }
 
         [HttpPost("login")]
@@ -37,7 +39,7 @@ namespace WebAPI3.Controllers
                     {
                         if (VerifyPasswordHash(model.Password, user.PasswordHash, user.PasswordSalt))
                         {
-                            var response = new LoginBack(user.FirstName,user.LastName,user.Pesel,user.Position,user.Sex,user.Email,CreateToken(user));
+                            var response = new LoginBack(user.Id, user.FirstName,user.LastName,user.Pesel,user.Position,user.Sex,user.Email,user.PhotoFile,CreateToken(user));
                             return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Użytkownik zalogowany", response));
                         }
                         else
@@ -88,6 +90,50 @@ namespace WebAPI3.Controllers
 
         }
 
+        [HttpPut("changePassword/{id}")]
+        public async Task<ResponseModel> ChangePassword(int id, ChangePasswordDto model)
+        {
+            var user = await _context.User.FindAsync(id);
+            if (VerifyPasswordHash(model.OldPassword, user.PasswordHash, user.PasswordSalt))
+            {
+                CreatePasswordHash(model.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+            }
+            else
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Podano błędne hasło", null));
+            try
+            {
+                await _context.SaveChangesAsync();
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Hasło zostało zmienione", null));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+            }
+        }
+
+        [HttpPut("changePhoto/{id}/{name}")]
+        public async Task<ResponseModel> ChangePhoto(int id, string name)
+        {
+            var user = await _context.User.FindAsync(id);
+            if (user != null)
+            {
+                user.PhotoFile = name;
+            }
+            else
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Nie znaleziono użytkownika", null));
+            try
+            {
+                await _context.SaveChangesAsync();
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Zdjęcie zostało zmienione", null));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<ResponseModel> PutUsers(int id, [FromBody] UserDto model)
         {
@@ -97,6 +143,7 @@ namespace WebAPI3.Controllers
             var userUpdate = _context.User.FirstOrDefault(x => x.Id == id);
             if (userUpdate != null)
             {
+                userUpdate.PhotoFile = model.PhotoFile;
                 userUpdate.FirstName = model.FirstName;
                 userUpdate.LastName = model.LastName;
                 userUpdate.Pesel = model.Pesel;
@@ -131,6 +178,7 @@ namespace WebAPI3.Controllers
             CreatePasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
             Teachers teachers = new Teachers();
             Users user = new Users();
+                user.PhotoFile = model.PhotoFile;
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.Email = model.Email;
@@ -141,8 +189,15 @@ namespace WebAPI3.Controllers
                 user.IdCard = model.IdCard;
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
-                if(user.Position == "T") user.Teacher = teachers.Id;
-                 else user.Teacher = null;
+                if (user.Position == "T")
+                {
+                    user.Teacher = teachers.Id;
+                    teachers.Side = model.Side;
+                    teachers.Phone = model.Phone;
+                    teachers.Description = model.Description;   
+                    teachers.Title = model.Title;
+                }
+                else user.Teacher = null;
 
             try
             {
@@ -182,6 +237,29 @@ namespace WebAPI3.Controllers
                 return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Użtkownik został usunięty", null));
             }
             catch(Exception ex)
+            {
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+            }
+        }
+
+        [HttpPost("saveFile")]
+        public async Task<ResponseModel> SaveFile()
+        {
+            try
+            {
+                var httpRequest = Request.Form;
+                var postedFile = httpRequest.Files[0];
+                string fileName = postedFile.FileName;
+                var physicalPath = _env.ContentRootPath + "/Photos/" + fileName; 
+                
+                using(var stream = new FileStream(physicalPath, FileMode.Create))
+                {
+                    postedFile.CopyTo(stream);
+                }
+
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Zdjęcie zostało dodane", fileName));
+            }
+            catch (Exception ex)
             {
                 return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
             }
