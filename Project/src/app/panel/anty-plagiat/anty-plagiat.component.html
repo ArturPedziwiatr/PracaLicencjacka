@@ -53,6 +53,6 @@
         </div>
     </div>  
 </div>
-<div *ngIf="getPosition() != 'S' || getPosition() != 'A'">
-
+<div *ngIf="getPosition() == 'S'">
+    <app-noPermission></app-noPermission>
 </div>

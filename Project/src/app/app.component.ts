@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Constants } from './auth/constants';
-import { SharedService } from './services/shared.service';
 
 @Component({
   selector: 'app-root',
@@ -13,26 +11,50 @@ import { SharedService } from './services/shared.service';
 export class AppComponent implements OnInit{
   title = 'Edziekanat';
   ModalTitle: string = 'Zaloguj się';
-  logger:any;
+  textMessage:string = '';
 
-  constructor(config: NgbModalConfig, private modalService: NgbModal, private route:Router ,private service: SharedService) { 
-    config.backdrop = 'static';
-    config.keyboard = false;
+  constructor(private route:Router ) { 
   }
   ngOnInit(): void {
   }
 
-  logIn(content: any){
-    this.modalService.open(content, { centered: true, windowClass: 'dark-modal' });
+  logger(){
+    document.getElementById('logger').style.display="block";
+    document.getElementById('btnSignIn').style.display="none";
   }
 
-  logOut(){
+  closeLogger(){
+    document.getElementById('logger').style.display="none";
+    document.getElementById('btnSignIn').style.display="block";
+  }
+
+  logOut(){ 
     localStorage.removeItem(Constants.USER_KEY);
     this.route.navigate(['home']);
+    window.location.reload();
   }
 
   get isUserLogin(){
     const user = localStorage.getItem(Constants.USER_KEY)
     return user && user.length>0;
   }
+
+  setMessage(msg:string, status:string){
+    this.textMessage = msg;
+    if(status == 'good') 
+      var showAddSucces = document.getElementById('update-success');
+    else if(status == 'bad')  
+      var showAddSucces = document.getElementById('update-fail');
+    
+      if(showAddSucces){
+        showAddSucces.style.display = "block";
+      }
+      setTimeout(function(){
+        if(showAddSucces){
+          showAddSucces.style.display = "none";
+        }
+      }, 3000);
+    
+  }
+
 }

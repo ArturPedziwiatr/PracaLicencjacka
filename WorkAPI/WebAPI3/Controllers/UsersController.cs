@@ -16,6 +16,7 @@ namespace WebAPI3.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        //Połączenie z bazą i konfiguracją
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _env;
@@ -26,7 +27,10 @@ namespace WebAPI3.Controllers
             _context = context;
             _env = env;
         }
+        //END
 
+        //System logowania. Przyjmuje wartości (login/email) i password,
+        //zwraca model ResponseModel(wartość czy się udało, wiadomość,model użytkownika) 
         [HttpPost("login")]
         public async Task<ResponseModel> Login([FromBody] Logger model)
         {
@@ -57,6 +61,81 @@ namespace WebAPI3.Controllers
             }
         }
 
+        //Metoda dodaje użytkowników do bazy danych
+        [HttpPost]
+        public async Task<ResponseModel> PostUsers(UserDto model)
+        {
+            CreatePasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            Teachers teachers = new Teachers();
+            Users user = new Users();
+            user.PhotoFile = model.PhotoFile;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.Pesel = model.Pesel;
+            user.Position = model.Position;
+            user.Sex = model.Sex;
+            user.Login = model.Username;
+            user.IdCard = model.IdCard;
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            if (user.Position == "T")
+            {
+                user.Teacher = teachers.Id;
+                teachers.Side = model.Side;
+                teachers.Phone = model.Phone;
+                teachers.Description = model.Description;
+                teachers.Title = model.Title;
+            }
+            else user.Teacher = null;
+
+            try
+            {
+                if (user.Position == "T")
+                {
+                    _context.Teacher.Add(teachers);
+                    _context.User.Add(user);
+                    await _context.SaveChangesAsync();
+                    return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Nauczyciel został dodany", null));
+                }
+                else
+                {
+                    _context.User.Add(user);
+                    await _context.SaveChangesAsync();
+                    return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Student został dodany", null));
+                }
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+            }
+        }
+
+        //Metoda dodaje zdjęcia do folderu serwera
+        [HttpPost("saveFile")]
+        public async Task<ResponseModel> SaveFile()
+        {
+            try
+            {
+                var httpRequest = Request.Form;
+                var postedFile = httpRequest.Files[0];
+                string fileName = postedFile.FileName;
+                var physicalPath = _env.ContentRootPath + "/Photos/" + fileName;
+
+                using (var stream = new FileStream(physicalPath, FileMode.Create))
+                {
+                    postedFile.CopyTo(stream);
+                }
+
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Zdjęcie zostało dodane", fileName));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+            }
+        }
+
+        //Metoda get zwraca listę użytkowników
         [HttpGet]
         public async Task<ResponseModel> GetUser()
         {
@@ -71,8 +150,9 @@ namespace WebAPI3.Controllers
             }
         }
 
+        //Metoda get zwraca użytkownika o podannym identyfikatorze
         [HttpGet("{id}")]
-        public async Task<ResponseModel> GetUsers(int id)
+        public async Task<ResponseModel> GetUsers(Guid id)
         {
             var users = await _context.User.FindAsync(id);
 
@@ -90,8 +170,10 @@ namespace WebAPI3.Controllers
 
         }
 
+        //Metoda put przyjmuje id użytkownika oraz stare i nowe hasło, gdy stare 
+        //hasło jest zgodne zostaje zmienione na nowe
         [HttpPut("changePassword/{id}")]
-        public async Task<ResponseModel> ChangePassword(int id, ChangePasswordDto model)
+        public async Task<ResponseModel> ChangePassword(Guid id, [FromBody] ChangePasswordDto model)
         {
             var user = await _context.User.FindAsync(id);
             if (VerifyPasswordHash(model.OldPassword, user.PasswordHash, user.PasswordSalt))
@@ -113,8 +195,10 @@ namespace WebAPI3.Controllers
             }
         }
 
+        //Metoda put przyjmuje id użytkownika oraz nazwę zdjęcia,
+        //oraz edytuje zdjęcie profilowe
         [HttpPut("changePhoto/{id}/{name}")]
-        public async Task<ResponseModel> ChangePhoto(int id, string name)
+        public async Task<ResponseModel> ChangePhoto(Guid id, string name)
         {
             var user = await _context.User.FindAsync(id);
             if (user != null)
@@ -134,12 +218,12 @@ namespace WebAPI3.Controllers
             }
         }
 
+
+        //Metoda przyjmuje wartości danych możliwych do edytowania w modelu
+        //użytkownik, oraz zamienia ich wartości
         [HttpPut("{id}")]
-        public async Task<ResponseModel> PutUsers(int id, [FromBody] UserDto model)
+        public async Task<ResponseModel> PutUsers(Guid id, [FromBody] UserDto model)
         {
-           /* if(GuardDate(model))
-                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Niepoprawne dane", null));
-           */
             var userUpdate = _context.User.FirstOrDefault(x => x.Id == id);
             if (userUpdate != null)
             {
@@ -168,61 +252,55 @@ namespace WebAPI3.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ResponseModel> PostUsers(UserDto model)
+
+        [HttpPut("basic/{id}")]
+        public async Task<ResponseModel> PutBasicUsers(Guid id, [FromBody] UserBasic model)
         {
-            /*if (GuardDate(model))
-               return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Błędne dane", null));*/
-        
-
-            CreatePasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            Teachers teachers = new Teachers();
-            Users user = new Users();
-                user.PhotoFile = model.PhotoFile;
-                user.FirstName = model.FirstName;
-                user.LastName = model.LastName;
-                user.Email = model.Email;
-                user.Pesel = model.Pesel;
-                user.Position = model.Position;
-                user.Sex = model.Sex;
-                user.Login = model.Username;
-                user.IdCard = model.IdCard;
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-                if (user.Position == "T")
-                {
-                    user.Teacher = teachers.Id;
-                    teachers.Side = model.Side;
-                    teachers.Phone = model.Phone;
-                    teachers.Description = model.Description;   
-                    teachers.Title = model.Title;
-                }
-                else user.Teacher = null;
-
+            var userUpdate = _context.User.FirstOrDefault(x => x.Id == id);
+            if (userUpdate != null)
+            {
+                userUpdate.FirstName = model.FirstName;
+                userUpdate.LastName = model.LastName;
+                userUpdate.Sex = model.Sex;
+                userUpdate.Email = model.Email;
+            }
             try
             {
-                if(user.Position == "T")
-                {
-                    _context.Teacher.Add(teachers);
-                    _context.User.Add(user);
-                    await _context.SaveChangesAsync();
-                    return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Nauczyciel został dodany", null));
-                }
-                else
-                {
-                    _context.User.Add(user);
-                    await _context.SaveChangesAsync();
-                    return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Student został dodany", null));
-                }
+                await _context.SaveChangesAsync();
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Zaktualizowano użytkownika", null));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
             }
         }
 
+            //Metoda put przyjmuje id użytkownika oraz nazwę zdjęcia,
+            //oraz edytuje zdjęcie profilowe
+            [HttpPut("admin/{id}")]
+        public async Task<ResponseModel> ChangeAdmin(Guid id)
+        {
+            var user = await _context.User.FindAsync(id);
+            if (user != null)
+            {
+                user.isAdmin = !user.isAdmin;
+            }
+            else return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Nie znaleziono użytkownika", null));
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Zdjęcie zostało zmienione", null));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+            }
+        }
+
+        //Metoda usuwa użytkowników z bazy danych
         [HttpDelete("{id}")]
-        public async Task<ResponseModel> DeleteUsers(int id)
+        public async Task<ResponseModel> DeleteUsers(Guid id)
         {
             var users = await _context.User.FindAsync(id);
             if (users == null)
@@ -242,34 +320,13 @@ namespace WebAPI3.Controllers
             }
         }
 
-        [HttpPost("saveFile")]
-        public async Task<ResponseModel> SaveFile()
-        {
-            try
-            {
-                var httpRequest = Request.Form;
-                var postedFile = httpRequest.Files[0];
-                string fileName = postedFile.FileName;
-                var physicalPath = _env.ContentRootPath + "/Photos/" + fileName; 
-                
-                using(var stream = new FileStream(physicalPath, FileMode.Create))
-                {
-                    postedFile.CopyTo(stream);
-                }
-
-                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Zdjęcie zostało dodane", fileName));
-            }
-            catch (Exception ex)
-            {
-                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
-            }
-        }
-
-        private bool UsersExists(int id)
+        //Metoda sprawdzająca czy dany uzytkownik istnieje w bazie danych
+        private bool UsersExists(Guid id)
         {
             return _context.User.Any(e => e.Id == id);
         }
 
+        //Funkcja tworzy hash do hasła
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512())
@@ -278,61 +335,8 @@ namespace WebAPI3.Controllers
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
-        //NotWorking
-        private bool GuardDate(UserDto model)
-        {
-            if (CheckPesel(model.Email)) return true;
-            if (StrongPassword(model.Password)) return true;
-            else return false;
-        }
-        
-        private bool CheckPesel(string p)
-        {
-            int control = 0;
-            bool result = true;
 
-            if (p.Length != 11) result = false;
-            else
-             for(var i=0; i<p.Length; i++) 
-                if (!(p[i] >= '0' && p[i] <= '9')) result = false;
-
-            control = 1 * Convert.ToInt32(new string(p[0], 1)) +
-                      3 * Convert.ToInt32(new string(p[1], 1)) +
-                      7 * Convert.ToInt32(new string(p[2], 1)) +
-                      9 * Convert.ToInt32(new string(p[3], 1)) +
-                      1 * Convert.ToInt32(new string(p[4], 1)) +
-                      3 * Convert.ToInt32(new string(p[5], 1)) +
-                      7 * Convert.ToInt32(new string(p[6], 1)) +
-                      9 * Convert.ToInt32(new string(p[7], 1)) +
-                      1 * Convert.ToInt32(new string(p[8], 1)) +
-                      3 * Convert.ToInt32(new string(p[9], 1));
-            control %= 10;
-            control = 10 - control;
-            control %= 10;
-            if (control != Convert.ToInt32(new string(p[10], 1))) result = false;
-
-            return result;
-        }
-
-        private bool StrongPassword(string p)
-        {
-            int big = 0;
-            int litle = 0;
-            int number = 0;
-
-            if (p.Length < 6) return true;
-
-            for (var i = 0; i < p.Length; i++)
-            {
-                if (p[i] >= 'a' && p[i] <= 'z') litle++;
-                else if (p[i] >= 'A' && p[i] <= 'Z') big++;
-                else if (p[i] >= '0' && p[i] <= '9') number++;
-            }
-            if (litle == 0 | big == 0 | number == 0) return true;              
-
-            return false;
-        }
-        //END
+        //Funkcja sprawdza czy podane hasło pasuje do hasła zapisanego w bazie danych
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512(passwordSalt))
@@ -342,6 +346,7 @@ namespace WebAPI3.Controllers
             }
         }
 
+        //Funkcja tworzy token użytkownika, który wygasa po jednym dniu
         private string CreateToken(Users user)
         {
             List<Claim> claims = new List<Claim>

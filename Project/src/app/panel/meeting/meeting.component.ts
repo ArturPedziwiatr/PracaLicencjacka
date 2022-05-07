@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { CalendarEvent } from 'angular-calendar';
 import { Meet } from 'src/app/model/meeting';
 import { SharedService } from 'src/app/services/shared.service';
 
@@ -11,14 +12,18 @@ import { SharedService } from 'src/app/services/shared.service';
 })
 export class MeetingComponent implements OnInit {
 
+  @Input() viewDate: Date;
+  @Input() events: CalendarEvent[] = [];
+
   closeResult: string='';
-  constructor(config: NgbModalConfig, private modal: NgbModal, private service: SharedService, ) { 
+  constructor(config: NgbModalConfig, private modal: NgbModal, private service: SharedService) { 
     config.backdrop = 'static';
     config.keyboard = false;
   }
 
   meetingList:Meet[]=[];
   modalTitle: string = '';
+  textMessage:string = '';
 
   ngOnInit(): void {
     this.modal.dismissAll();
@@ -27,17 +32,12 @@ export class MeetingComponent implements OnInit {
     });
   }
 
+
   addMeeting(content: any){
     this.modal.open(content, { centered: true, size: 'xl' });
     this.modalTitle = "Dodaj spotkanie";
   }
 
-  editClick(content:any,item:any){
 
-  }
-
-  deleteClick(item:any){
-    
-  }
-
+  setTextMessage(message:string){this.textMessage = message;}
 }

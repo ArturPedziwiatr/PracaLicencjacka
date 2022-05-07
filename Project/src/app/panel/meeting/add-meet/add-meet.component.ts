@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { id } from 'date-fns/locale';
+import { AppComponent } from 'src/app/app.component';
+import { Show } from 'src/app/model/showMeet';
 import { Student } from 'src/app/model/studentDto';
 import { Teacher } from 'src/app/model/teacherDto';
 import { SharedService } from 'src/app/services/shared.service';
@@ -12,16 +15,19 @@ import { MeetingComponent } from '../meeting.component';
 })
 export class AddMeetComponent implements OnInit {
 
-  constructor(private service: SharedService,private formBuilder:FormBuilder, private show:MeetingComponent) { }
+  constructor(private service: SharedService,private formBuilder:FormBuilder, private show:MeetingComponent, private main:AppComponent) { }
   studentList:Array<Student> = [];
   teacherList:Array<Teacher> = [];
-  idList = new Array<Student>();
+  secondList = new Array<Student>();
+  idList:string[] = [];
   userPosition:string="";
   screen:number = 0;
-  idUser:number;
+  idUser:string;
   dateStart:string;
   dateEnd:string;
   delete:number;
+  showUser:Show;
+  searchText:string='';
 
   public meetingForm = this.formBuilder.group({
     title:['',[
@@ -45,6 +51,7 @@ export class AddMeetComponent implements OnInit {
   })
 
   ngOnInit(): void {
+    this.showUser = new Show(this.getId(),this.getPosition());
     this.service.getTeacherList().subscribe((data:any)=>{
       this.teacherList = data;
     });
@@ -55,50 +62,64 @@ export class AddMeetComponent implements OnInit {
   }
 
   addTeacher(id:any){
+    this.showUser = new Show(id,"T");
     this.idUser = id;
     this.nextScreen();
   }
 
   addStudent(item:any){
-    this.idList.push(item);
+    this.secondList.push(item);
     this.studentList = this.studentList.filter(e => e.id!==item.id);
+  }
+
+  deleteStudent(item:any){
+    this.studentList.push(item);
+    this.secondList = this.secondList.filter(e => e.id!==item.id);
   }
 
   addMeetingS(){
     var dateStart = this.meetingForm.controls["date"].value.toString() + "T" + this.meetingForm.controls["timeStart"].value.toString() + ":00.000Z";
     var dateEnd  =  this.meetingForm.controls["date"].value.toString() + "T" + this.meetingForm.controls["timeEnd"].value.toString() + ":00.000Z";
+    this.idList.push(this.getId());
 
-    this.service.addMeet(
-      this.idUser,this.getId(),this.meetingForm.controls["title"].value,this.meetingForm.controls["description"].value,dateStart,dateEnd
-    ).subscribe((data:any)=>{
+    this.service.addMeet(this.meetingForm.controls["title"].value,this.meetingForm.controls["description"].value,dateStart,dateEnd,false).subscribe((data:any)=>{
       if(data.responseCode == 1){
-        this.show.ngOnInit();
-        alert("działa");
+        this.service.addConnector(this.idUser,this.idList,data.dateSet).subscribe((res:any)=>{
+          this.show.ngOnInit();
+          if(res.responseCode == 1){
+            this.main.setMessage("Pomyślnie poproszono o spotkanie",'good'); 
+          }
+          else if(res.responseCode == 2)
+            this.main.setMessage("Prośba o spotkanie nie została utworzona",'bad'); 
+          else alert("Błąd bazy");
+        })
       }
-      else if(data.responseCode == 2){
-        alert(data.responseMessage);
-      }
+      else if(data.responseCode == 2)
+        this.main.setMessage("Niepoprawne dane spotkania",'bad');
     })
   }
 
   addMeetingT(){
     var dateStart = this.meetingForm.controls["date"].value.toString() + "T" + this.meetingForm.controls["timeStart"].value.toString() + ":00.000Z";
     var dateEnd  =  this.meetingForm.controls["date"].value.toString() + "T" + this.meetingForm.controls["timeEnd"].value.toString() + ":00.000Z";
-    var result = true;
-    var counter = 0;
 
-    for(let list of this.idList){
-      this.service.addMeet(
-        this.getId(),list.id,this.meetingForm.controls["title"].value,this.meetingForm.controls["description"].value,dateStart,dateEnd
-      ).subscribe((data:any)=>{
-        if(data.responseCode == 2)
-          result = false;
-          counter;
-      })
+    for(let list of this.secondList){
+      this.idList.push(list.id);
     }
-
-    if(!result) alert("Nie udało się stworzyć tyle spotkań:  " + counter);
-    else this.show.ngOnInit();
+      this.service.addMeet(this.meetingForm.controls["title"].value,this.meetingForm.controls["description"].value,dateStart,dateEnd,true).subscribe((data:any)=>{
+        this.show.ngOnInit();
+        if(data.responseCode == 1){
+          this.service.addConnector(this.getId(),this.idList,data.dateSet).subscribe((res:any)=>{
+            if(res.responseCode == 1)
+              this.main.setMessage("Spotkanie zostało utworzone",'good');
+            else if(res.responseCode == 2)
+              this.main.setMessage("Spotkanie nie zostało utworzone",'bad');
+            else alert("Błąd bazy");
+          })
+        }
+        else if(data.responseCode == 2)
+          this.main.setMessage("Błędne dane spotkania",'bad');
+      })
   }
 
   nextScreen(){if(this.screen<1)this.screen ++;}

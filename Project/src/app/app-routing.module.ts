@@ -6,10 +6,10 @@ import { StudentsComponent } from './panel/students/students.component';
 import { TeachersComponent } from './panel/teachers/teachers.component';
 import { HomeComponent } from './panel/home/home.component';
 import { UsersComponent } from './panel/users/users.component';
-import { SignInComponent } from './sign-in/sign-in.component';
 import { AuthService } from './auth/auth.service';
 import { NoPermissionComponent } from './error/noPermission';
 import { SettingComponent } from './panel/setting/setting.component';
+import { NotFoundComponent } from './error/not-found.component';
 
 const routes: Routes = [
   {path: 'home', component:HomeComponent},
@@ -20,8 +20,9 @@ const routes: Routes = [
   {path: 'users',  component: UsersComponent, canActivate:[AuthService]},
   {path: 'meeting', component: MeetingComponent, canActivate:[AuthService] },
   {path: 'plagiat',  component: AntyPlagiatComponent, canActivate:[AuthService]},
-  {path: 'login', component:SignInComponent},
-  {path: 'noPermission', component:NoPermissionComponent}
+  {path: 'noPermission', component:NoPermissionComponent},
+  {path: '404', component: NotFoundComponent},
+  {path: '**', redirectTo: '/404'}
 ];
 
 @NgModule({

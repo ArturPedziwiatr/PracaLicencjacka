@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="getPosition()=='A'">
   <ng-template #content let-modal>
     <div class="modal-header">
       <h4 class="modal-title" id="modal-basic-title">{{modalTitle}}</h4>
@@ -9,17 +9,7 @@
     </div>
   </ng-template>
 
-  <div class="alert alert-success" role="alert" id="add-success-alert-user">
-    Pomyślnie dodano użytkownika
-  </div>
 
-  <div class="alert alert-success" role="alert" id="update-success-alert-user">
-    Pomyślnie zaktualizowano użytkownika
-  </div>
-
-  <div class="alert alert-success" role="alert" id="delete-success-alert-user">
-    Pomyślnie usunięto użytkownika
-  </div>
   
   <div class="panelTitle">
     Lista użytkowników
@@ -94,4 +84,7 @@
           </tr>
       </tbody>
   </table>
+</div>
+<div *ngIf="getPosition()!='A'">
+  <app-noPermission></app-noPermission>
 </div>  

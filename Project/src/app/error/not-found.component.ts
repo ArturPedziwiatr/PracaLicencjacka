@@ -1,7 +1,7 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-noPermission',
+  selector: 'app-not-found',
   template: `
      <div id="main-error-content">
         <div id="iconNoPermission">
@@ -12,27 +12,19 @@ import { Component, OnInit} from '@angular/core';
             </svg>
         </div>
         <div id="titleErrorSide">
-            <a>BRAK POZWOLENIA</a>
+            <a>Nie znaleziono strony</a>
             <div id="space"></div>
-            Wygląda na to że nie masz uprawnień do odwiedzenia tej strony.
+            Wygląda na to że podana strona nie istnieje.
         <div>
-        <div class="loginBox">
-            <div class="card" style="width: 100%;">
-                <div class="card-body">
-                  <app-sign-in></app-sign-in>
-                </div>
-            </div>
-        </div>
      </div> 
   `,
-  styleUrls: ['apperror.component.css'], 
+  styleUrls: ['apperror.component.css']
 })
-export class NoPermissionComponent implements OnInit{
+export class NotFoundComponent implements OnInit {
 
-  constructor() { 
-  }
+  constructor() { }
+
   ngOnInit(): void {
   }
 
-  
 }

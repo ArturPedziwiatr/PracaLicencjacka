@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Teacher } from 'src/app/model/teacherDto';
+import { AppComponent } from 'src/app/app.component';
+import { Constants } from 'src/app/auth/constants';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
@@ -10,8 +11,9 @@ import { SharedService } from 'src/app/services/shared.service';
 })
 export class SettingComponent implements OnInit {
 
-  PhotoFilePath:string = 'https://localhost:7012/Photos/undefinded.png';
+  PhotoFilePath:string = '';
   photoFile:string = 'undefinded.png';
+  teacher:any;
   user:any;
   id:any;
   textMessage:string = "";
@@ -68,62 +70,45 @@ export class SettingComponent implements OnInit {
     ]],
   });  
 
-  constructor(private formBuilder:FormBuilder, private service:SharedService) { }
+  constructor(private formBuilder:FormBuilder, private service:SharedService, private main:AppComponent) { }
 
   ngOnInit(): void {
+    this.PhotoFilePath = this.service.PhotoUrl;
     this.user = JSON.parse(localStorage.getItem("userInfo"));
-    if(this.user.position == "T")
-    {
-      this.getTeacher(this.user.id);
-    }
-    else
-      this.getUser(this.user.id); 
-  }
 
-  getUser(id:number){
-    this.service.getUserId(id).subscribe((dataU:any)=>{
-      if(dataU.responseCode == 1)
-      {
-        this.PhotoFilePath = this.service.PhotoUrl + dataU.dateSet.photoFile;
-        this.setValue(this.user.position, dataU.dateSet);
-      }
-      else {
-        alert("Problem z bazą użytkownika");
-        return null;
-      }
-    })
-  }
-
-  getTeacher(id:number){
-    this.service.getTeacherSetting(id).subscribe((dataT:any)=>{
-        if(dataT.responseCode == 1)
-        {
-          this.PhotoFilePath = this.service.PhotoUrl + dataT.dateSet.photoFile;
-          this.setValue(this.user.position, dataT.dateSet);
-        }
-        else {
-          alert("Problem z bazą użytkownika");
-          return null;
-        }
-    });
-  }
-
-  setValue(position:string, model:any){
-    if(position == "T"){
-      this.userForm.get('title').setValue(model.title);
-      this.userForm.get('description').setValue(model.description);
-      this.userForm.get('phone').setValue(model.phone);
-      this.userForm.get('side').setValue(model.side);
-      this.id = model.idTeacher;
-    }
-    this.userForm.get('firstName').setValue(model.firstName);
-    this.userForm.get('lastName').setValue(model.lastName);
-    this.userForm.get('email').setValue(model.email);
-    this.userForm.get('sex').setValue(model.sex);
+    this.photoFile = this.user.photoFile;
+    this.userForm.get('firstName').setValue(this.user.firstName);
+    this.userForm.get('lastName').setValue(this.user.lastName);
+    this.userForm.get('email').setValue(this.user.email);
+    this.userForm.get('sex').setValue(this.user.sex);
     this.passwordForm.get('password').setValue("");
     this.passwordForm.get('passwordOld').setValue("");
     this.passwordForm.get('passwordSecond').setValue("");
     this.passwordForm.get('passwordOldSecond').setValue("");
+
+    if(this.user.position == "T")
+      this.getTeacher(this.user.id);
+    
+  }
+
+  getTeacher(id:number){
+    this.service.getTeacherSetting(id).subscribe((data:any)=>{
+        if(data.responseCode == 1)
+        {
+          this.teacher = data.dateSet;
+          this.setValue();
+        }
+        else 
+          alert("Problem z bazą użytkownika");
+    });
+  }
+
+  setValue(){
+      this.userForm.get('title').setValue(this.teacher.title);
+      this.userForm.get('description').setValue(this.teacher.description);
+      this.userForm.get('phone').setValue(this.teacher.phone);
+      this.userForm.get('side').setValue(this.teacher.side);
+      this.id = this.teacher.idTeacher;
   }
 
   uploadPhoto(event:any){
@@ -135,7 +120,6 @@ export class SettingComponent implements OnInit {
       if(data.responseCode == 1){
         this.photoFile = data.dateSet;
         this.changePhoto();
-        this.ngOnInit();
       }
       else if(data.responseCode == 2) alert(data.responseMessage);
       else alert("Błąd bazy");
@@ -144,76 +128,45 @@ export class SettingComponent implements OnInit {
 
   changePhoto(){
       this.service.changePhoto(this.user.id, this.photoFile).subscribe((dataPhoto:any)=>{
-        console.log(dataPhoto);
         if(dataPhoto.responseCode == 1){
-          this.textMessage = "Pomyślnie zaktualizowano zdjęcie"
-          var showAddSucces = document.getElementById('update-success');
-            if(showAddSucces){
-              showAddSucces.style.display = "block";
-            }
-            setTimeout(function(){
-              if(showAddSucces){
-                showAddSucces.style.display = "none";
-              }
-            }, 3000);
+          this.main.setMessage('Pomyślnie zaktualizowano zdjęcie','good');
+          this.relogUser(this.user.id);
         }
-        else if(dataPhoto.responseCode == 2){
-          this.textMessage = dataPhoto.responseMessage;
-          var showAddSucces = document.getElementById('update-fail');
-            if(showAddSucces){
-              showAddSucces.style.display = "block";
-            }
-            setTimeout(function(){
-              if(showAddSucces){
-                showAddSucces.style.display = "none";
-              }
-            }, 3000);
-        }
+        else if(dataPhoto.responseCode == 2)
+          this.main.setMessage('Nie zaktualizowano zdjęcia','bad');
         else alert("Błąd systemu");
 
-        this.ngOnInit();
+        window.location.reload();
       })
   }
 
   editUser(){
-    const body={
-      photoFile:this.user.photoFile,
+
+    var user = {
       firstName:this.userForm.controls["firstName"].value,
       lastName:this.userForm.controls["lastName"].value,
-      pesel:this.user.pesel,
+      email:this.userForm.controls["email"].value,
       sex:this.userForm.controls["sex"].value,
-      email:this.user.email,
-      idCard:this.user.idCard,
-      password:""
-    }
-    this.service.updateUser(this.user.id, body).subscribe((data:any)=>{
-      if(data.responseCode == 1){
-        this.textMessage = "Pomyślnie zaktualizowano dane podstawowe"
-        var showAddSucces = document.getElementById('update-success');
-          if(showAddSucces){
-            showAddSucces.style.display = "block";
-          }
-          setTimeout(function(){
-            if(showAddSucces){
-              showAddSucces.style.display = "none";
-            }
-          }, 3000);
       }
-      else if(data.responseCode == 2){
-        this.textMessage = data.textMessage;
-        var showAddSucces = document.getElementById('update-fail');
-          if(showAddSucces){
-            showAddSucces.style.display = "block";
-          }
-          setTimeout(function(){
-            if(showAddSucces){
-              showAddSucces.style.display = "none";
-            }
-          }, 3000);
-      }
-      else alert("Błąd systemu");
-    })
 
+      this.service.updateBasicUser(this.user.id,user).subscribe((res:any) =>{
+        if(res.responseCode == 1)
+        {
+          this.main.setMessage('Pomyślnie zaktualizowano dane podstawowe','good');
+          this.relogUser(this.user.id);
+        }
+        else
+          this.main.setMessage('Aktualizowanie danych nie powiodło się','bad');
+      }) 
+  }
+
+  relogUser(id:any){
+    this.service.getUserId(this.user.id).subscribe((data:any)=>{
+      if(data.responseCode == 1)
+        localStorage.setItem(Constants.USER_KEY, JSON.stringify(data.dateSet));
+      else if(data.responseCode == 2)
+        this.main.setMessage('Błąd wymiany danych. Nastąpiło wylogowanie użytkownika','bad');
+    })
   }
 
   editTeacher(){
@@ -224,30 +177,10 @@ export class SettingComponent implements OnInit {
       description:this.userForm.controls["description"].value
     }
     this.service.updateTeacher(this.id, body).subscribe((data:any)=>{
-      if(data.responseCode == 1){
-        this.textMessage = "Pomyślnie zaktualizowano dane rozszerzone"
-        var showAddSucces = document.getElementById('update-success');
-          if(showAddSucces){
-            showAddSucces.style.display = "block";
-          }
-          setTimeout(function(){
-            if(showAddSucces){
-              showAddSucces.style.display = "none";
-            }
-          }, 3000);
-      }
-      else if(data.responseCode == 2){
-        this.textMessage = data.textMessage;
-        var showAddSucces = document.getElementById('update-fail');
-          if(showAddSucces){
-            showAddSucces.style.display = "block";
-          }
-          setTimeout(function(){
-            if(showAddSucces){
-              showAddSucces.style.display = "none";
-            }
-          }, 3000);
-      }
+      if(data.responseCode == 1)
+        this.main.setMessage('Pomyślnie zaktualizowano dane rozszerzone','good');
+      else if(data.responseCode == 2)
+        this.main.setMessage('Nie zaktualizowano danych rozszerzonych','bad');
       else alert("Błąd systemu");
     })
   }
@@ -258,30 +191,10 @@ export class SettingComponent implements OnInit {
       newPassword:this.passwordForm.controls["password"].value
     }
       this.service.changePassword(this.user.id, body).subscribe((data:any)=>{
-        if(data.responseCode == 1){
-          this.textMessage = "Pomyślnie zaktualizowano hasło"
-          var showAddSucces = document.getElementById('update-success');
-            if(showAddSucces){
-              showAddSucces.style.display = "block";
-            }
-            setTimeout(function(){
-              if(showAddSucces){
-                showAddSucces.style.display = "none";
-              }
-            }, 3000);
-        }
-        else if(data.responseCode == 2){
-          this.textMessage = data.textMessage;
-          var showAddSucces = document.getElementById('update-fail');
-            if(showAddSucces){
-              showAddSucces.style.display = "block";
-            }
-            setTimeout(function(){
-              if(showAddSucces){
-                showAddSucces.style.display = "none";
-              }
-            }, 3000);
-        }
+        if(data.responseCode == 1)
+          this.main.setMessage('Pomyślnie zaktualizowano hasło','good');
+        else if(data.responseCode == 2)
+          this.main.setMessage(data.textMessage,'bad');
         else alert("Błąd systemu");
       })
   }

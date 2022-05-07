@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation  } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { SharedService } from 'src/app/services/shared.service';
 import { User } from 'src/app/model/user';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-users',
@@ -11,7 +12,7 @@ import { User } from 'src/app/model/user';
 })
 export class UsersComponent implements OnInit {
   closeResult: string='';
-  constructor(config: NgbModalConfig, private modal: NgbModal, private service: SharedService, ) { 
+  constructor(config: NgbModalConfig, private modal: NgbModal, private service: SharedService, private main:AppComponent) { 
     config.backdrop = 'static';
     config.keyboard = false;
   }
@@ -86,19 +87,21 @@ export class UsersComponent implements OnInit {
     if(confirm('Jesteś pewny ??')){
        if(item.position == 'A') alert("Nie masz uprawnień")
       else{
-        this.service.deleteUser(item.id).subscribe(res =>{
-          this.ngOnInit();
-          var showAddSucces = document.getElementById('delete-success-alert-user');
-          if(showAddSucces){
-            showAddSucces.style.display = "block";
+        this.service.deleteUser(item.id).subscribe((res:any) =>{
+          if(res.responseCode == 1){
+            this.ngOnInit()
+            this.main.setMessage('Pomyślnie usunięto użytkownika','good');
           }
-          setTimeout(function(){
-            if(showAddSucces){
-              showAddSucces.style.display = "none";
-            }
-          }, 3000);
+          else
+            this.main.setMessage('PNie udało się usunąć użytkownika','bad');
+          
         });
        }
     }  
+  }
+
+  getPosition(){
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+    return user.position;
   }
 }

@@ -24,11 +24,9 @@ namespace WebAPI3.Migrations
 
             modelBuilder.Entity("WebAPI.Models.Users", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -86,29 +84,37 @@ namespace WebAPI3.Migrations
                     b.Property<Guid?>("Teacher")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("isAdmin")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("IdCard")
+                        .IsUnique();
+
+                    b.HasIndex("Pesel")
+                        .IsUnique();
 
                     b.ToTable("User");
                 });
 
             modelBuilder.Entity("WebAPI3.Models.MeetConnector", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<Guid>("IdMessage")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("IdMessage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("IdStudent")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("IdStudent")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IdTeacher")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("IdTeacher")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -167,9 +173,6 @@ namespace WebAPI3.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isAccepted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isEnd")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");

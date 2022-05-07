@@ -27,16 +27,71 @@
     font-size: 20px;
     padding: 10px;
 }
+
 .table-teacher-body{
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0.7rem;
     margin-top: 5px;
     width: 90%;
-    height: 25px;
+    height: 2rem;
     border: 3px solid var(--blue);
     border-radius: 15px;
-    padding-left: 5px;
-    padding-bottom: 4px;
-    font-weight: bold;
+    padding: 0.3rem 0.3rem;
+    background-color: var(--white);
+}
 
+.table-teacher-body:hover{
+    color: var(--white);
+    background-color: var(--blue);
+}
+
+.table-teacher-body:hover .corss-right{
+    display: inline;
+    width: auto;
+    float: right;
+    margin-right: 2rem;
+    
+}
+
+.contener-administratora{
+    height: 4rem !important;
+    padding: 1 rem 1rem;    
+}
+
+.container-show-teacher{
+    width: 50%;
+    height: 30rem;
+    margin-right: 1rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    float: left;
+}
+
+.fl-l1{float: left; margin-right: 1rem;}
+
+.container-forms{
+    width: 40%;
+    float: left;
+}
+
+.button-container{
+    float: left;
+    width: 40%;
+}
+
+.btn-dodaj{
+    float: left;
+    width: 40%;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    margin-left: 2rem;
+}
+
+.btn-prev{
+    float: left;
+    width: 40%;
+    margin-top: 1rem;
+}
+
+.corss-right{
+    display: none;
 }

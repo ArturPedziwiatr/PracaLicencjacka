@@ -10,7 +10,7 @@
             <input type="text" name="search" [(ngModel)]="searchText" placeholder="Wyszukuj" class="searchBox">
           </div>
         </div>
-      </div>
+    </div>
     <div class="student-container" *ngFor="let student of studentList | filter:searchText">
         <div class="student-image">
             <img [src]="PhotoFilePath + student.photoFile" height="100%" width="100%" >
@@ -26,6 +26,6 @@
         </div>
     </div>
 </div>
-<div *ngIf="getPosition() != 'S' || getPosition() != 'A'">
-
+<div *ngIf="getPosition() == 'S'">
+    <app-noPermission></app-noPermission>
 </div>

@@ -2,7 +2,7 @@
 {
     public class TeacherSetting
     {
-        public TeacherSetting(int id, string firstName, string lastName, string position, string sex, string email, string photoFile,
+        public TeacherSetting(Guid id, string firstName, string lastName, string position, string sex, string email, string photoFile,
             string idTeacher, string title, string description, string phone, string side)
         {
             Id = id;
@@ -18,7 +18,7 @@
             Phone = phone;
             Side = side;
         }
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string PhotoFile { get; set; }
 
         public string FirstName { get; set; }

@@ -13,11 +13,10 @@ namespace WebAPI3.Migrations
                 name: "Connectors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdStudent = table.Column<int>(type: "int", nullable: false),
-                    IdTeacher = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdMessage = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdStudent = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdTeacher = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdMessage = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,8 +32,7 @@ namespace WebAPI3.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    isAccepted = table.Column<bool>(type: "bit", nullable: false),
-                    isEnd = table.Column<bool>(type: "bit", nullable: false)
+                    isAccepted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,8 +58,7 @@ namespace WebAPI3.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PhotoFile = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -73,12 +70,31 @@ namespace WebAPI3.Migrations
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     Login = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     IdCard = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
-                    Teacher = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Teacher = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    isAdmin = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_Email",
+                table: "User",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_IdCard",
+                table: "User",
+                column: "IdCard",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_Pesel",
+                table: "User",
+                column: "Pesel",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

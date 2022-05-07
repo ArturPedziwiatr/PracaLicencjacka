@@ -13,8 +13,6 @@ namespace WorkAPI.Model
         public DateTime DateStart { get; set; }
         [Required]
         public DateTime DateEnd { get; set; }
-        public Boolean isAccepted { get; set; } = false;
-        public Boolean isEnd { get; set; } = false;
-        
+        public Boolean isAccepted { get; set; } = false;      
     }
 }

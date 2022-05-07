@@ -1,7 +1,7 @@
 export class Meet{
-    public id:number;
-    public idTeacher:number;
-    public idStudent:number;
+    public id:any;
+    public idTeacher:any;
+    public idStudent:any;
     public title:string = "";
     public description:string = "";
     public year:number;
@@ -13,7 +13,7 @@ export class Meet{
     public minutesEnd:number;
     public isAccepted:boolean;
 
-    constructor(id:number, idTeacher:number, idStudent:number, title:string,
+    constructor(id:any, idTeacher:any, idStudent:any, title:string,
         description:string, isAccepted:boolean, timeStart:string, timeEnd:string){
             this.id=id;
             this.idTeacher=idTeacher;

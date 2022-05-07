@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router} from '@angular/router';
 import { SharedService } from '../services/shared.service';
 
 @Component({
@@ -8,28 +9,45 @@ import { SharedService } from '../services/shared.service';
 })
 export class MenuBarComponent implements OnInit {
 
-  constructor(private service: SharedService) { }
+  constructor(private service: SharedService, private router:Router) { }
 
+  active:number = 1;
   ngOnInit(): void {
   }
 
   getPosition(){
     const user = JSON.parse(localStorage.getItem("userInfo"));
+    if(user == null) return 'U';
     return user.position;
   }
 
-  /*getChecked(){
-    var showAddSucces = document.getElementById('buttonSetting');
-    if(showAddSucces.isActive){
-
+  changeSide(side:string){
+    switch(side){
+      case 'home':
+        this.active = 1;
+        break;
+      case 'setting':
+        this.active = 2;
+        break;
+      case 'student':
+        this.active = 3;
+        break;
+      case 'teacher':
+        this.active = 4;
+        break;
+      case 'users':
+        this.active = 5;
+        break;
+      case 'meeting':
+        this.active = 6;
+        break;
+      case 'plagiat':
+        this.active = 7;
+        break;
+      default:
+        alert("Błąd danych");
+        break;
     }
-    let listNav = document.querySelectorAll('.nav li');
-    function active(){
-      listNav.forEach((itemlist)=>
-      itemlist.classList.remove('hovered'));
-      this.classList.add('hovered');
-    }
-    listNav.forEach((itemlist) =>
-    itemlist.addEventListener('mouseover',active))
-  }*/
+    this.router.navigate([side]);
+  }
 }

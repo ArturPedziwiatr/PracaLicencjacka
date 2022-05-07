@@ -23,6 +23,13 @@
     overflow: auto;
 }
 
+@media only screen and (max-width: 65em) {
+  .menuVertical{
+      width: 10%;
+      min-width: 7em;
+  }
+}
+
 .activity{
   
     padding: 15px;
@@ -32,6 +39,22 @@
     text-decoration: none;
     overflow-y: auto;
 
+}
+
+#logger{
+  display:none;
+  width: 20rem;
+  background-color: var(--white);
+  padding: 0.5rem 0.5rem;
+  border: 3px solid var(--blue);
+  border-radius: 8px;
+  animation-name: openLogger;
+  animation-duration: 0.3s;
+}
+
+#close-loger{
+  float:right;
+  position: relative;
 }
 
 .signInBtn{
@@ -66,3 +89,98 @@
 ::-webkit-scrollbar-thumb:window-inactive {
   background: #0e446c;
 } 
+
+#update-success,
+#update-fail{
+    display: none;
+}
+
+#update-success,
+#update-fail{
+    animation-name: fadeInAndOut;
+    animation-duration: 3s;
+}
+
+@-webkit-keyframes fadeInAndOut{
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+@keyframes fadeInAndOut{
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+@-webkit-keyframes fadeIn{
+  0% {opacity: 0;}
+  50% {opacity: 0.5;}
+  100% {opacity: 1;}
+}
+
+@keyframes fadeIn{
+  0% {opacity: 0;}
+  50% {opacity: 0.5;}
+  100% {opacity: 1;}
+}
+
+@-webkit-keyframes fadeOut{
+  0% {opacity: 1;}
+  50% {opacity: 0.5;}
+  100% {opacity: 0;}
+}
+
+@keyframes fadeOut{
+  0% {opacity: 1;}
+  50% {opacity: 0.5;}
+  100% {opacity: 0;}
+}
+
+@-webkit-keyframes openLogger{
+  0% {width: 0%;}
+  5% {width: 5%;}
+  10% {width: 10%;}
+  15% {width: 15%;}
+  20% {width: 20%;}
+  25% {width: 25%;}
+  30% {width: 30%;}
+  35% {width: 35%;}
+  40% {width: 40%;}
+  45% {width: 45%;}
+  50% {width: 50%;}
+  55% {width: 55%;}
+  60% {width: 60%;}
+  65% {width: 65%;}
+  70% {width: 70%;}
+  75% {width: 75%;}
+  80% {width: 80%;}
+  85% {width: 85%;}
+  90% {width: 90%;}
+  95% {width: 95%;}
+  100% {width: 100%;}
+}
+
+@keyframes openLogger{
+  0% {width: 0%;}
+  5% {width: 5%;}
+  10% {width: 10%;}
+  15% {width: 15%;}
+  20% {width: 20%;}
+  25% {width: 25%;}
+  30% {width: 30%;}
+  35% {width: 35%;}
+  40% {width: 40%;}
+  45% {width: 45%;}
+  50% {width: 50%;}
+  55% {width: 55%;}
+  60% {width: 60%;}
+  65% {width: 65%;}
+  70% {width: 70%;}
+  75% {width: 75%;}
+  80% {width: 80%;}
+  85% {width: 85%;}
+  90% {width: 90%;}
+  95% {width: 95%;}
+  100% {width: 100%;}
+}

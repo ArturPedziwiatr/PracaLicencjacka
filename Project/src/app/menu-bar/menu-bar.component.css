@@ -47,6 +47,7 @@
     height: 60px;
     line-height: 55px;
     text-align: center;
+    z-index: 2;
 }
 
 .nav ul li button .title{
@@ -60,6 +61,7 @@
 }
 
 .nav ul li:hover button::before{
+    z-index: 0;
     content: '';
     position: absolute;
     right: 0;
@@ -73,6 +75,7 @@
 }
 
 .nav ul li:hover button::after{
+    z-index: 0;
     content: '';
     position: absolute;
     right: 0;
@@ -84,3 +87,18 @@
     box-shadow: 35px -35px 0 10px var(--white);
     pointer-events: none;
 }
+
+.selectBtn{
+    background-color: var(--white) !important;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    color: var(--blue) !important;
+}
+
+@media only screen and (max-width: 65em) {
+    .title {
+        display:none;
+    }
+}
+
+

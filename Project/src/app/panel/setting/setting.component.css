@@ -73,26 +73,3 @@
     margin-top: 5rem;
     margin-bottom: 5rem;
 }
-
-#update-success,
-#update-fail{
-    display: none;
-}
-
-#update-success,
-#update-fail{
-    animation-name: fadeInAndOut;
-    animation-duration: 3s;
-}
-
-@-webkit-keyframes fadeInAndOut{
-    0% {opacity: 0;}
-    50% {opacity: 1;}
-    100% {opacity: 0;}
-}
-
-@keyframes fadeInAndOut{
-    0% {opacity: 0;}
-    50% {opacity: 1;}
-    100% {opacity: 0;}
-}

@@ -3,8 +3,8 @@ namespace WebAPI3.BindingModel
 {
     public class ConectorDto
     {
-        public string IdTeacher { get; set; } = string.Empty;
-        public string IdMessage { get; set; } = string.Empty;
-        public int[] StudentIds { get; set; }
+        public Guid IdTeacher { get; set; }
+        public Guid IdMessage { get; set; }
+        public Guid[] StudentIds { get; set; }
     }
 }

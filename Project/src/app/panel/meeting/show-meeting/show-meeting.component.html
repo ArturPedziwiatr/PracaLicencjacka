@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-6">
+      <div class="btn-group">
+        <div
+          class="btn btn-primary"
+          mwlCalendarPreviousView
+          [view]="'week'"
+          [(viewDate)]="viewDate"
+        >
+          Poprzedni
+        </div>
+        <div
+          class="btn btn-outline-secondary"
+          mwlCalendarToday
+          [(viewDate)]="viewDate"
+        >
+          Aktualny
+        </div>
+        <div
+          class="btn btn-primary"
+          mwlCalendarNextView
+          [view]="'week'"
+          [(viewDate)]="viewDate"
+        >
+          Następny
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  
+  <mwl-calendar-week-view
+    [viewDate]="viewDate"
+    [events]="events"
+    [excludeDays]="excludeDays"
+    [hourSegments]="1"
+  >
+  </mwl-calendar-week-view>

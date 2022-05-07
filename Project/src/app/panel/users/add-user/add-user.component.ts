@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { getuid } from 'process';
-import { ResponseModel } from 'src/app/model/responseModel';
+import { AppComponent } from 'src/app/app.component';
 import { SharedService } from 'src/app/services/shared.service';
 import { UsersComponent } from '../users.component';
 
@@ -60,25 +59,24 @@ export class AddUserComponent implements OnInit {
 
   id: number|string = "";
 
-  constructor(private service: SharedService, private show: UsersComponent,private formBuilder:FormBuilder) { }
+  constructor(private service: SharedService, private show: UsersComponent, private main:AppComponent,private formBuilder:FormBuilder) { }
 
   ngOnInit(): void {
-    if(this.statusEdit == 0){
-      this.registerForm.get('firstName').setValue(this.usr.firstName);
-      this.registerForm.get('lastName').setValue(this.usr.lastName);
-      this.registerForm.get('email').setValue(this.usr.email);
-      this.registerForm.get('pesel').setValue(this.usr.pesel);
-      this.registerForm.get('sex').setValue(this.usr.sex);
-      this.registerForm.get('idCard').setValue(this.usr.idCard);
-      this.id = this.usr.id;
-      if(this.status == 3) this.photoFile = this.usr.photoFile;
-      this.PhotoFilePath = this.service.PhotoUrl + this.photoFile;
-    }
-    else{
-      if(this.status == 3) this.photoFile = this.usr.photoFile;
-      this.PhotoFilePath = this.service.PhotoUrl + this.photoFile;
-      this.statusEdit = 0;
-    }
+    this.PhotoFilePath = this.service.PhotoUrl;
+      if(this.statusEdit == 0){
+        this.registerForm.get('firstName').setValue(this.usr.firstName);
+        this.registerForm.get('lastName').setValue(this.usr.lastName);
+        this.registerForm.get('email').setValue(this.usr.email);
+        this.registerForm.get('pesel').setValue(this.usr.pesel);
+        this.registerForm.get('sex').setValue(this.usr.sex);
+        this.registerForm.get('idCard').setValue(this.usr.idCard);
+        this.id = this.usr.id;
+        if(this.status == 3)
+          this.photoFile = this.usr.photoFile;
+      }
+      else
+        this.statusEdit = 0;
+
   }
 
   uploadPhoto(event:any){
@@ -88,10 +86,13 @@ export class AddUserComponent implements OnInit {
 
     this.service.UploadPhoto(formData).subscribe((data:any)=>{
       if(data.responseCode == 1){
+        this.main.setMessage('Dodano zdjęcie do bazy','good');
         this.photoFile = data.dateSet;
+        this.statusEdit=1;
         this.ngOnInit();
       }
-      else if(data.responseCode == 2) alert(data.responseMessage);
+      else if(data.responseCode == 2)
+        this.main.setMessage(data.responseMessage,'bad');
       else alert("Błąd bazy");
     });
   }
@@ -117,23 +118,15 @@ export class AddUserComponent implements OnInit {
       position:"S",
       sex:this.registerForm.controls["sex"].value,
       password:this.registerForm.controls["passwordR"].value,
-      idCard:this.registerForm.controls["idCard"].value,
+      idCard:this.registerForm.controls["idCard"].value
     }
     this.service.addUser(user).subscribe((data:any)=>{
       if(data.responseCode == 1){
        this.show.ngOnInit();
-       var showAddSucces = document.getElementById('add-success-alert-user');
-       if(showAddSucces){
-         showAddSucces.style.display = "block";
-       }
-       setTimeout(function(){
-         if(showAddSucces){
-           showAddSucces.style.display = "none";
-         }
-       }, 3000);
+       this.main.setMessage('Pomyślnie dodano studenta','good');
       }
       else if(data.responseCode == 2){
-        alert(data.responseMessage);
+        this.main.setMessage(data.responseMessage,'bad');
       }
     });
     
@@ -149,23 +142,15 @@ export class AddUserComponent implements OnInit {
       position:"T",
       sex:this.registerForm.controls["sex"].value,
       password:this.registerForm.controls["passwordR"].value,
-      idCard:this.registerForm.controls["idCard"].value,
+      idCard:this.registerForm.controls["idCard"].value
     }
 
     this.service.addUser(user).subscribe((data:any) =>{
       if(data.responseCode ==1){
         this.show.ngOnInit();
-        var showAddSucces = document.getElementById('add-success-alert-user');
-        if(showAddSucces){
-          showAddSucces.style.display = "block";
-        }
-        setTimeout(function(){
-          if(showAddSucces){
-            showAddSucces.style.display = "none";
-          }
-        }, 3000);
+        this.main.setMessage('Pomyślnie dodano pracownika','good');
       }else if(data.responseCode == 2){
-        alert(data.responseMessage);
+        this.main.setMessage(data.responseMessage,'bad');
       }
       
     })
@@ -174,6 +159,7 @@ export class AddUserComponent implements OnInit {
 
   editUser(){
       var user = {
+        photoFile:this.photoFile,
         firstName:this.registerForm.controls["firstName"].value,
         lastName:this.registerForm.controls["lastName"].value,
         email:this.registerForm.controls["email"].value,
@@ -181,20 +167,15 @@ export class AddUserComponent implements OnInit {
         position:this.usr.position,
         sex:this.registerForm.controls["sex"].value,
         password:this.registerForm.controls["password"].value,
-        idCard:this.registerForm.controls["idCard"].value,
+        idCard:this.registerForm.controls["idCard"].value
         }
 
-        this.service.updateUser(this.id,user).subscribe(res =>{
+        this.service.updateUser(this.id,user).subscribe((res:any) =>{
           this.show.ngOnInit();
-          var showAddSucces = document.getElementById('update-success-alert-user');
-          if(showAddSucces){
-            showAddSucces.style.display = "block";
-          }
-          setTimeout(function(){
-            if(showAddSucces){
-              showAddSucces.style.display = "none";
-            }
-          }, 3000);
+          if(res.responseCode == 1)
+            this.main.setMessage('Pomyślnie zaktualizowano dane','good');
+          else
+            this.main.setMessage('Aktualizowanie danych nie powiodło się','bad');
         }) 
   }
 }

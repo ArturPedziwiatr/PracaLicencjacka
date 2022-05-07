@@ -11,13 +11,16 @@ namespace WebAPI3.Controllers
     [ApiController]
     public class ConnectorController : ControllerBase
     {
+        //Połączenie z bazą danych
         private readonly DataContext _context;
 
         public ConnectorController(DataContext context)
         {
             _context = context;
         }
+        //END
 
+        //Metoda zwraca listę połączeń między spotkaniem a użytkownikami
         [HttpGet]
         public async Task<ResponseModel> GetConnector()
         {
@@ -32,14 +35,15 @@ namespace WebAPI3.Controllers
             }
         }
 
+        //Metoda dodaje połączenia między spotkaniem a użytkownikami do bazy danych
         [HttpPost]
         public async Task<ResponseModel> PostConector([FromBody] ConectorDto model)
         {
  
-            Array idStudents = model.StudentIds;
+            var idStudents = model.StudentIds;
             try
             {
-                foreach(int id in idStudents)
+                foreach(Guid id in idStudents)
                 {
                     MeetConnector connector = new MeetConnector();
                     connector.IdTeacher = model.IdTeacher;
@@ -49,6 +53,27 @@ namespace WebAPI3.Controllers
                     await _context.SaveChangesAsync();
                 }             
                 return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Spotkanie zostało dodane", null));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+            }
+        }
+
+        [HttpGet("S/{id}")]
+        public async Task<ResponseModel> GetConnectorS(Guid id)
+        {
+            try
+            {
+                var connector = (from u in _context.User
+                                 join c in _context.Connectors on u.Id equals c.IdStudent
+                                 select new {c.IdMessage,u.FirstName, u.LastName, u.IdCard }).AsEnumerable();
+                connector = connector.Where(x => x.IdMessage == id);
+
+                /*var userList = (from c in connector
+                                join u in _context.User on c.IdStudent equals u.Id
+                                select new { u.FirstName, u.LastName, u.IdCard }).AsEnumerable();*/
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Spotkanie zostało odnalezione", connector));
             }
             catch (Exception ex)
             {

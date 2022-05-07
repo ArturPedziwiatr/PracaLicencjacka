@@ -14,14 +14,16 @@ namespace WebAPI3.Controllers
     [ApiController]
     public class TeachersController : ControllerBase
     {
+        //Połączenie z bazą danych
         private readonly DataContext _context;
 
         public TeachersController(DataContext context)
         {
             _context = context;
         }
-
+        //END
         
+        //Metoda zwraca listę nauczycieli
         [HttpGet("GetTeacher")]
         public async Task<ResponseModel> GetTeacher()
         {
@@ -54,6 +56,7 @@ namespace WebAPI3.Controllers
             }
         }
 
+        //Metoda zwraca listę studentów
         [HttpGet("GetStudent")]
         public async Task<ResponseModel> GetStudent()
         {
@@ -70,10 +73,11 @@ namespace WebAPI3.Controllers
             }
         }
 
+        //Metoda przyjmuje wartości modelu Teacher i edytuje dane w bazie
         [HttpPut("{id}")]
-        public async Task<ResponseModel> PutTeachers(string id, Teachers model)
+        public async Task<ResponseModel> PutTeachers(Guid id, Teachers model)
         {
-            var teacherUser = _context.Teacher.FirstOrDefault(x => x.Id.ToString() == id);
+            var teacherUser = _context.Teacher.FirstOrDefault(x => x.Id == id);
             if (teacherUser != null)
             {
                 teacherUser.Title = model.Title;
@@ -93,8 +97,9 @@ namespace WebAPI3.Controllers
 
         }
 
+        //Metoda zwraca nauczyciela o podanym identyfikatorze
         [HttpGet("{id}")]
-        public async Task<ResponseModel> GetTeachers(int id)
+        public async Task<ResponseModel> GetTeachers(Guid id)
         {
             try
             {
@@ -110,66 +115,5 @@ namespace WebAPI3.Controllers
             }
         }
 
-        /*// PUT: api/Teachers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        
-        [HttpPost]
-        public async Task<ResponseModel> PostTeachers(TeachersDto model)
-        {
-            CreatePasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            Users user = new Users();
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.Email = model.Email;
-            user.Pesel = model.Pesel;
-            user.Position = model.Position;
-            user.Sex = model.Sex;
-            user.Login = model.Username;
-            user.IdCard = model.IdCard;
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-            user.Teacher = model.Teachers;
-
-            try
-            {
-                _context.User.Add(user);
-                await _context.SaveChangesAsync();
-                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Użtkownik został dodany", null));
-            }
-            catch (Exception ex)
-            {
-                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
-            }
-        }
-
-        
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTeachers(int id)
-        {
-            var teachers = await _context.Teacher.FindAsync(id);
-            if (teachers == null)
-            {
-                return NotFound();
-            }
-
-            _context.Teacher.Remove(teachers);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool TeachersExists(int id)
-        {
-            return _context.Teacher.Any(e => e.Id == id);
-        }
-
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
-        }*/
     }
 }

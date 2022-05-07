@@ -1,17 +1,9 @@
-<div class="alert alert-success" role="alert" id="update-success">
-{{textMessage}}
-</div>
-
-<div class="alert alert-danger" role="alert" id="update-fail">
-    {{textMessage}}
-</div>
-
 <div>
     <div id="main-container">
        
         <div class="first-date-container">
             <div class="ml-3 bd-highlight imageUpload" >
-                <img [src]="PhotoFilePath" height="90%" width="100%">
+                <img [src]="PhotoFilePath + photoFile" height="90%" width="100%">
                 <input type="file" (change)="uploadPhoto($event)" />
             </div>
         </div>

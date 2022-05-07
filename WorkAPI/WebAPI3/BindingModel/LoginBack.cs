@@ -4,7 +4,7 @@ namespace WebAPI3.BindingModel
 {
     public class LoginBack
     {
-        public LoginBack(int id, string firstName, string lastName, string pesel, string position, string sex, string email,string photoFile, string token)
+        public LoginBack(Guid id, string firstName, string lastName, string pesel, string position, string sex, string email,string photoFile, string token)
         {
             Id = id;
             FirstName = firstName;
@@ -16,7 +16,7 @@ namespace WebAPI3.BindingModel
             PhotoFile = photoFile;
             Token = token;
         }
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Pesel { get; set; }

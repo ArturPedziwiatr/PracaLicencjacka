@@ -5,11 +5,11 @@ namespace WebAPI3.Models
     public class MeetConnector
     {
         [Key]
-        public int Id { get; set; }
-        public int IdStudent { get; set; }
-        public string IdTeacher { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid IdStudent { get; set; }
+        public Guid IdTeacher { get; set; }
         [Required]
-        public string IdMessage { get; set; }
+        public Guid IdMessage { get; set; }
 
     }
 }

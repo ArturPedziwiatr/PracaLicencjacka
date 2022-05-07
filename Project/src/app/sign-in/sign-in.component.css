@@ -1,0 +1,8 @@
+.margBottom{
+    margin-bottom: 5px;
+}
+
+#main-sig-in{
+    animation-name: fadeIn;
+    animation-duration: 0.5s;
+}

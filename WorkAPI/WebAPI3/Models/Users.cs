@@ -1,12 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 using WebAPI3.Models;
 
 namespace WebAPI.Models
 {
+    /*[Index(nameof(Email), IsUnique = true), Index(nameof(Pesel), IsUnique = true), Index(nameof(IdCard), IsUnique = true)]*/
     public class Users
     {
         
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [StringLength(100)]
         [Required]
@@ -44,6 +47,7 @@ namespace WebAPI.Models
         [Required]
         public string IdCard { get; set; }
 
-        public Guid? Teacher { get; set; } 
+        public Guid? Teacher { get; set; }
+        public Boolean isAdmin { get; set; } = false;
     }
 }

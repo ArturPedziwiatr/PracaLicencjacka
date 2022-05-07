@@ -1,0 +1,130 @@
+<div>
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Informacje spotkania</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="col-sm-10 left-move">
+            <span class="titleEmpDown">Tytuł:</span>
+            <input type="text" class="form-control" [ngModel]="information.title" [disabled]="true"
+            placeholder="Imię" >
+        </div>
+        <div class="col-sm-10 left-move">
+            <span class="titleEmpDown">Opis:</span>
+            <textarea class="form-control" [ngModel]="information.description" [disabled]="true" rows="3"></textarea>
+        </div>
+        <div class="col-sm-10 left-move">
+            <span class="titleEmpDown">Data:</span>
+            <input type="text" class="form-control" [ngModel]="getDateToDocument(information.year,information.month,information.day,information.hourStart,information.hourEnd,information.minutesStart,information.minutesEnd)" [disabled]="true"
+            placeholder="Imię" >
+        </div>
+        <div class="col-sm-10 left-move">
+            <span class="titleEmpDown">Lista studentów:</span>
+            <div *ngIf="studentList.length != 0">
+                <table class="table table-striped">
+                    <thead>
+                        <th>ID</th>
+                        <th>Imię</th>
+                        <th>Nazwisko</th>
+                        <th>Numer albumu</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of studentList ; let i = index">
+                            <td>{{i}}</td>
+                            <td>{{item.firstName}}</td>
+                            <td>{{item.lastName}}</td>
+                            <td>{{item.idCard}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div *ngIf="studentList.length == 0">
+                Brak zapisanych studentów
+            </div>
+        </div>
+      </div>
+    </ng-template>
+</div>
+<div>
+    <br>
+    <div class="container">
+        <div class="row">
+          <div class="search-container">
+            <input type="text" name="search" [(ngModel)]="searchText" placeholder="Wyszukuj" class="searchBox">
+          </div>
+        </div>
+    </div>
+    <br>
+    <div class="header-list-button">
+        <div id="header-title" class="border-top-radius" (click)="selectScreen(1)" [ngClass]="{'selected-item-header': active==1}">
+            Lista aktywnych spotkań 
+        </div>
+        <div id="bodyOne" class="body-list-button">
+            <div id="item-list" *ngFor="let meet of userListActive | filter:searchText;let i = index">
+                <div id="sector-id">{{i}}</div>
+                <div id="sector-title">{{meet.title}}</div>
+                <div id="sector-date">{{ getDateToDocument(meet.year,meet.month,meet.day,meet.hourStart,meet.hourEnd,meet.minutesStart,meet.minutesEnd) }}</div>
+                <div id="sector-option" >
+                    <button id="btn-see-meet" (click)="openModal(content,meet)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                    </svg></button>
+                    <div id="br-rgh" *ngIf="getUserPart('position') == 'T'"></div>
+                    <button id="btn-see-meet" (click)="changeAccepted(meet.id,'delete')" *ngIf="getUserPart('position') == 'T'"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"/>
+                      </svg></button>
+                </div>
+            </div>
+        </div>
+        <div id="empty-one" class="empty-item-list" >
+            Brak aktywnych spotkań
+        </div>
+    </div>
+    <div class="header-list-button">
+        <div id="header-title"  (click)="selectScreen(2)" [ngClass]="{'selected-item-header': active==2}">
+            Lista nieaktywnych spotkań
+        </div>
+        <div id="bodySecond" class="body-list-button" >
+            <div id="item-list" *ngFor="let meet of userListUnactive | filter:searchText;let i = index">
+                <div id="sector-id">{{i}}</div>
+                <div id="sector-title">{{meet.title}}</div>
+                <div id="sector-date">{{ getDateToDocument(meet.year,meet.month,meet.day,meet.hourStart,meet.hourEnd,meet.minutesStart,meet.minutesEnd) }}</div>
+                <div id="sector-option" >
+                    <button id="btn-see-meet" (click)="openModal(content,meet)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                    </svg></button>
+                    <div id="br-rgh" *ngIf="getUserPart('position') == 'T'"></div>
+                    <button id="btn-see-meet" (click)="changeAccepted(meet.id,'add')" *ngIf="getUserPart('position') == 'T'"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                      </svg></button>
+                </div>
+            </div>
+        </div>
+        <div id="empty-second" class="empty-item-list">
+            Brak nieaktywnych spotkań
+        </div>
+    </div>
+    <div class="header-list-button">
+        <div id="header-title-last"class="border-bottom-radius" (click)="selectScreen(3)" [ngClass]="{'selected-item-header': active==3}">
+            Historia spotkań
+        </div>
+        <div id="bodyThird" class="body-list-button black-border-1">
+            <div id="item-list" *ngFor="let meet of historyList | filter:searchText;let i = index; let last = last" [ngClass]="{'last-item-list': last}">
+                <div id="sector-id">{{i}}</div>
+                <div id="sector-title">{{meet.title}}</div>
+                <div id="sector-date">{{ getDateToDocument(meet.year,meet.month,meet.day,meet.hourStart,meet.hourEnd,meet.minutesStart,meet.minutesEnd) }}</div>
+                <div id="sector-option" >
+                    <button id="btn-see-meet" (click)="openModal(content,meet)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                    </svg></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="empty-third" class="empty-item-list br-bttm-8">
+        Historia spotkań jest pusta
+    </div>
+</div>

@@ -1,6 +1,35 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title"><div id="content-title">Informacje o nauczycielu</div></h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <img [src]="PhotoFilePath+information.photoFile" height="150px;" width="120px;" class="photo-teacher" >
+        <div class="col-sm-7 left-move">
+            <span class="titleEmpDown">Imię i nazwisko:</span>
+            <input type="text" class="form-control" [disabled]="true"
+            [ngModel]="information.title + ' ' + information.firstName + ' ' + information.lastName" >
+        </div>
+        <div class="col-sm-7 left-move">
+            <span class="titleEmpDown">Email:</span>
+            <input type="text" class="form-control" [disabled]="true"
+            [ngModel]="information.email">
+        </div>
+        <div class="col-sm-7 left-move">
+            <span class="titleEmpDown">Strona:</span>
+            <input type="text" class="form-control" [ngModel]="information.side" [disabled]="true"
+            placeholder="Imię" >
+        </div>
+        <div class="col-sm-11 left-move">
+            <span class="titleEmpDown">Opis nauczyciela:</span>
+            <textarea class="form-control" [ngModel]="information.description" [disabled]="true" rows="3"></textarea>
+        </div>
+    </div>
+</ng-template>
+
 <div *ngIf="getPosition() == 'S' || getPosition() == 'A'">
     <div class="panelTitle">
-        Lista studentów
+        Lista Nauczycieli
     </div>
     <br>
     <br>
@@ -10,39 +39,55 @@
             <input type="text" name="search" [(ngModel)]="searchText" placeholder="Wyszukuj" class="searchBox">
           </div>
         </div>
-      </div>
-    <button class="teacher-container" *ngFor="let teacher of teacherList | filter:searchText">
-        <img [src]="PhotoFilePath + teacher.photoFile" class="teacher-image" >
+    </div>
 
-        <div class="teacher-date">
-            <div class="panelTitle">Dane Nauczyciela</div>
-            <div class="container-word"> 
-                <div class="container-name"><h1>Imię i nazwisko:</h1>{{teacher.title + " " + teacher.firstName + " " + teacher.lastName}}</div>    
-                <div class="container-name"><h1>Email:</h1>{{teacher.email}}</div> 
-                <div class="container-name"><h1>Płeć:</h1>{{getSex(teacher.sex)}}</div>                 
-            </div>
-        </div>
-        <div></div>
-        <div class="container-word-hidden">
-            <div class="panelTitle">Dane Nauczyciela</div>
-            <div class="container-name"><h1>Imię i nazwisko:</h1>{{teacher.title + " " + teacher.firstName + " " + teacher.lastName}}</div>    
-            <div class="container-name"><h1>Email:</h1>{{teacher.email}}</div> 
-            <div class="container-name"><h1>Płeć:</h1>{{getSex(teacher.sex)}}</div> 
-            <div class="container-second">
-                <div *ngIf="!getValue(teacher.side)" class="container-name"><h1>Strona:</h1>{{teacher.side}}</div> 
-                <div *ngIf="!getValue(teacher.phone)" class="container-name"><h1>Telefon:</h1>{{teacher.phone}}</div> 
-            </div>
-            <h2>Opis:</h2>
-            <div *ngIf="!getValue(teacher.description)" class="container-describe">
-                {{teacher.description}}
-            </div> 
-            <div *ngIf="getValue(teacher.description)" class="container-describe">
-                <h3>Brak opisu</h3>
-            </div> 
-        </div>
-    </button>
-    
+    <table class="table table-striped">
+        <thead>
+            <th>ID</th>
+            <th>Imię i nazwisko</th>
+            <th>Email</th>
+            <th>Strona</th>
+            <th>Telefon</th>
+            <th>Płeć</th>
+            <th>Szcególy</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of teacherList | filter:searchText ; let i = index">
+                <td>{{i}}</td>
+                <td>{{item.title + ' ' + item.firstName + ' ' + item.lastName}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.side}}</td>
+                <td>{{item.phone}}</td>
+                <td>
+                  <div *ngIf="item.sex == 'U'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gender-trans" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1.707L3.5 2.793l.646-.647a.5.5 0 1 1 .708.708l-.647.646.822.822A3.99 3.99 0 0 1 8 3c1.18 0 2.239.51 2.971 1.322L14.293 1H11.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V1.707l-3.45 3.45A4 4 0 0 1 8.5 10.97V13H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V14H6a.5.5 0 0 1 0-1h1.5v-2.03a4 4 0 0 1-3.05-5.814l-.95-.949-.646.647a.5.5 0 1 1-.708-.708l.647-.646L1 1.707V3.5a.5.5 0 0 1-1 0v-3zm5.49 4.856a3 3 0 1 0 5.02 3.288 3 3 0 0 0-5.02-3.288z"/>
+                    </svg>
+                  </div>
+                  <div *ngIf="item.sex == 'K'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gender-female" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2V9.975A5 5 0 0 1 3 5z"/>
+                    </svg>
+                  </div>
+                  <div *ngIf="item.sex == 'M'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gender-male" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2H9.5zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
+                    </svg>
+                  </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-primary me-2 mb1 "
+                    (click)="watchProfile(content,item)" >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                      </svg>
+                    </button>     
+                </td>
+            </tr>
+        </tbody>
+    </table>  
 </div>
-<div *ngIf="getPosition() != 'S' || getPosition() != 'A'">
-
+<div *ngIf="getPosition() == 'T'">
+  <app-noPermission></app-noPermission>
 </div>
