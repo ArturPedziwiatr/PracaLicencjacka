@@ -23,14 +23,18 @@ export class ShowTextComponent implements OnInit {
   }
 
   addWorld(){
-    this.textOne = this.text[0].split(' ');
-    this.textSecond = this.text[1].split(' ');
+    const splited = /[., „\r\n\”""]/;
+    this.textOne = this.text[0].split(splited);
+    this.textOne = this.textOne.filter(e => e!="");
+    this.textSecond = this.text[1].split(splited);
+    this.textSecond = this.textSecond.filter(e => e!="");
   }
 
   getSameWorld(){
     for(let i=0; i<this.textOne.length; i++){
       for(let j=0; j<this.textSecond.length; j++){
         if(this.textOne[i].toLowerCase() === this.textSecond[j].toLowerCase() && !(this.matrix.includes(this.textOne[i]))){
+          if(this.textOne[i]!='')
             this.matrix.push(this.textOne[i]);
         }
       }
@@ -40,6 +44,11 @@ export class ShowTextComponent implements OnInit {
   findWord(word: string): boolean{
     if(this.matrix.includes(word)) return true;
     else return false;
+  }
+
+  getPercent(text:string[], mtx:string[]){
+    
+    return ((mtx.length/text.length)*100).toFixed(2);
   }
 
 }

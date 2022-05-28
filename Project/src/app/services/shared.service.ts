@@ -8,6 +8,8 @@ import { Meet } from '../model/meeting';
 import { Teacher } from '../model/teacherDto';
 import { Student } from '../model/studentDto';
 import { StudentList } from '../model/studentList';
+import { id } from 'date-fns/locale';
+import { MenuBarComponent } from '../menu-bar/menu-bar.component';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +44,7 @@ export class SharedService implements OnInit {
         if(res.dateSet){
           res.dateSet.map((x:User)=>{
             userList.push(new User(x.id,x.photoFile,x.firstName,x.lastName,
-              x.pesel,x.email,x.position,x.sex,x.idCard));
+              x.pesel,x.email,x.position,x.sex,x.idCard,x.isAdmin));
           })
         }
       }
@@ -96,8 +98,9 @@ export class SharedService implements OnInit {
     }));
   }
 
-  public addMeet(Title:string,Description:string,DateStart:string,DateEnd:string, IsAccepted:boolean){
+  public addMeet(Id:string,Title:string,Description:string,DateStart:string,DateEnd:string, IsAccepted:boolean){
     const model:any={
+      idTeacher: Id,
       title: Title,
       description: Description,
       dateStart: DateStart,
@@ -134,10 +137,6 @@ export class SharedService implements OnInit {
 
   public changeAccepted(id:any){
     return this.http.put(this.APIUrl + `/Meting/isAccepted/${id}`,"true");
-  } 
-
-  public changeEnd(id:number|string){
-    return this.http.delete(this.APIUrl + `/Meting/isEnd/${id}`);
   } 
 
   public getMeetingTeacher(id: number|string){
@@ -227,6 +226,15 @@ export class SharedService implements OnInit {
   public UploadPhoto(val:any){
     return this.http.post(this.APIUrl+'/Users/saveFile',val);
   }
+
+  public setAdmin(id:string){
+    return this.http.put<ResponseModel>(this.APIUrl + `/Users/admin/${id}`, null);
+  }
+
+  public generateIdCard(){
+    return this.http.get<ResponseModel>(this.APIUrl + '/Users/card');
+  }
+
 }
 
 

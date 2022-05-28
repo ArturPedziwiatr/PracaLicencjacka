@@ -141,7 +141,6 @@ export class SettingComponent implements OnInit {
   }
 
   editUser(){
-
     var user = {
       firstName:this.userForm.controls["firstName"].value,
       lastName:this.userForm.controls["lastName"].value,
@@ -197,6 +196,43 @@ export class SettingComponent implements OnInit {
           this.main.setMessage(data.textMessage,'bad');
         else alert("Błąd systemu");
       })
+  }
+
+  validators(name:string){
+    switch(name){
+      case 'firstName':
+        if(this.userForm.controls[name].invalid) return true
+        break;
+      case 'lastName':
+        if(this.userForm.controls[name].invalid) return true
+        break;
+      case 'email':
+        if(this.userForm.controls[name].invalid) return true
+        break;
+      case 'passwordSecond':
+        if(this.passwordForm.controls[name].invalid) return true
+        if(this.strong(this.passwordForm.controls[name].value)) return true;
+        break;
+      case 'password':
+        if(this.passwordForm.controls[name].invalid) return true
+        if(this.strong(this.passwordForm.controls[name].value)) return true;
+        break;
+    }
+    return false
+  }
+
+  strong(paswd:string){
+    let number = false;
+    let big = false;
+    let small = false;
+    if(paswd == "") return false;
+    for(let i=0; i<paswd.length; i++){
+      if(paswd[i] >= '0' && paswd[i] <= '9') number = true;
+      if(paswd[i] >= 'A' && paswd[i] <= 'Z') big = true;
+      if(paswd[i] >= 'a' && paswd[i] <= 'z') small = true;
+    }
+    if(number == false || big == false || small == false) return true;
+    else return false;
   }
 
   isActive(){

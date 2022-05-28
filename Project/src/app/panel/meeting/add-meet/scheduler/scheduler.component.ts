@@ -4,7 +4,7 @@ import { id } from 'date-fns/locale';
 import { AppComponent } from 'src/app/app.component';
 import { Meet } from 'src/app/model/meeting';
 import { SharedService } from 'src/app/services/shared.service';
-import { MeetingComponent } from '../meeting.component';
+import { MeetingComponent } from '../../meeting.component';
 
 @Component({
   selector: 'app-scheduler',

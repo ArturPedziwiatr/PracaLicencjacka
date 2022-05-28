@@ -26,7 +26,7 @@ export class AddUserComponent implements OnInit {
     lastName:['',[
       Validators.minLength(6),
       Validators.pattern("[a-zA-ZąęóżźćśłŁńŃĄŚĆĘŻŹÓ ]*"),
-      Validators.maxLength(40)
+      Validators.maxLength(60)
     ]],
     pesel:['',[
       Validators.required,
@@ -49,7 +49,6 @@ export class AddUserComponent implements OnInit {
       Validators.minLength(6)
     ]],
     passwordR:['',[
-      Validators.required,
       Validators.minLength(8)
     ]],
     password:['',[
@@ -92,7 +91,7 @@ export class AddUserComponent implements OnInit {
         this.ngOnInit();
       }
       else if(data.responseCode == 2)
-        this.main.setMessage(data.responseMessage,'bad');
+        this.main.setMessage(data.responseMesage,'bad');
       else alert("Błąd bazy");
     });
   }
@@ -126,7 +125,7 @@ export class AddUserComponent implements OnInit {
        this.main.setMessage('Pomyślnie dodano studenta','good');
       }
       else if(data.responseCode == 2){
-        this.main.setMessage(data.responseMessage,'bad');
+        this.main.setMessage(data.responseMesage,'bad');
       }
     });
     
@@ -150,12 +149,11 @@ export class AddUserComponent implements OnInit {
         this.show.ngOnInit();
         this.main.setMessage('Pomyślnie dodano pracownika','good');
       }else if(data.responseCode == 2){
-        this.main.setMessage(data.responseMessage,'bad');
+        this.main.setMessage(data.responseMesage,'bad');
       }
       
     })
   }
-
 
   editUser(){
       var user = {
@@ -175,7 +173,77 @@ export class AddUserComponent implements OnInit {
           if(res.responseCode == 1)
             this.main.setMessage('Pomyślnie zaktualizowano dane','good');
           else
-            this.main.setMessage('Aktualizowanie danych nie powiodło się','bad');
+            this.main.setMessage(res.responseMesage,'bad');
         }) 
+  }
+
+  validators(name:string){
+    if(this.registerForm.controls[name].invalid) return true
+    switch(name){
+      case 'passwordR':
+        if(this.strong(this.registerForm.controls[name].value))
+          return true;
+        break;
+      case 'password':
+        if(this.strong(this.registerForm.controls[name].value))
+          return true;
+        break;
+      case 'pesel':
+        if(this.pesel(this.registerForm.controls[name].value))
+          return true;
+        break;
+    }
+    return false
+
+  }
+
+  strong(paswd:string){
+    let number = false;
+    let big = false;
+    let small = false;
+    if(paswd == "" && this.status == 3) return false;
+    for(let i=0; i<paswd.length; i++){
+      if(paswd[i] >= '0' && paswd[i] <= '9') number = true;
+      if(paswd[i] >= 'A' && paswd[i] <= 'Z') big = true;
+      if(paswd[i] >= 'a' && paswd[i] <= 'z') small = true;
+    }
+    if(number == false || big == false || small == false) return true;
+    else return false;
+  }
+
+  pesel(psl:string){
+    if(psl.length == 11)
+    {
+      let sum=1*Number(psl[0])+3*Number(psl[1])+7*Number(psl[2])+9*Number(psl[3])+1*Number(psl[4])+3*Number(psl[5])+7*Number(psl[6])+9*Number(psl[7])+1*Number(psl[8])+3*Number(psl[9]);
+      sum = 10 - (sum%10);
+      if(sum!=Number(psl[10]))return true;
+      
+    }
+    
+    return false;
+  }
+
+  generate(){
+    this.service.generateIdCard().subscribe((data:any)=>{
+      if(data.responseCode == 1){
+        this.registerForm.get('idCard').setValue(data.dateSet);
+        this.statusEdit = 1;
+        this.ngOnInit();
+      }
+      else
+        this.main.setMessage('Błąd generatora indeksów','bad');
+    })
+  }
+
+  paswdR(name:string){
+    if(!this.registerForm.valid)return true
+      if(this.strong(this.registerForm.controls[name].value))return true 
+        if(this.pesel(this.registerForm.controls['pesel'].value))return true 
+    return false
+  }
+
+  outIndeks(){
+    if(this.status == 3) return true;
+    else return false;
   }
 }

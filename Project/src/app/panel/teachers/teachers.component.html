@@ -18,11 +18,11 @@
         <div class="col-sm-7 left-move">
             <span class="titleEmpDown">Strona:</span>
             <input type="text" class="form-control" [ngModel]="information.side" [disabled]="true"
-            placeholder="Imię" >
+            placeholder="brak" >
         </div>
         <div class="col-sm-11 left-move">
             <span class="titleEmpDown">Opis nauczyciela:</span>
-            <textarea class="form-control" [ngModel]="information.description" [disabled]="true" rows="3"></textarea>
+            <textarea class="form-control" [ngModel]="information.description" [disabled]="true" rows="3" placeholder="brak" ></textarea>
         </div>
     </div>
 </ng-template>
@@ -49,7 +49,7 @@
             <th>Strona</th>
             <th>Telefon</th>
             <th>Płeć</th>
-            <th>Szcególy</th>
+            <th>Szczegóły</th>
         </thead>
         <tbody>
             <tr *ngFor="let item of teacherList | filter:searchText ; let i = index">

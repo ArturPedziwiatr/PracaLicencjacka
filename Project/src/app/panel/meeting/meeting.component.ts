@@ -4,6 +4,7 @@ import { CalendarEvent } from 'angular-calendar';
 import { Meet } from 'src/app/model/meeting';
 import { SharedService } from 'src/app/services/shared.service';
 
+
 @Component({
   selector: 'app-meeting',
   templateUrl: './meeting.component.html',
@@ -21,15 +22,11 @@ export class MeetingComponent implements OnInit {
     config.keyboard = false;
   }
 
-  meetingList:Meet[]=[];
   modalTitle: string = '';
   textMessage:string = '';
 
   ngOnInit(): void {
     this.modal.dismissAll();
-    this.service.getMeetingList().subscribe((data:any)=>{
-      this.meetingList = data;
-    });
   }
 
 

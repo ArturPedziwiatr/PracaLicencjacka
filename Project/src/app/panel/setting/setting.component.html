@@ -17,17 +17,20 @@
                     
                     <div class="col-sm-2 left-move">
                         <span class="titleEmpDown">Imię:</span>
-                        <input type="text" class="form-control" formControlName="firstName">
+                        <input type="text" class="form-control" formControlName="firstName"
+                        [ngClass]="{'red-warn':validators('firstName')===true , 'green-warn':validators('firstName')===false}">
                     </div>
             
                     <div class="col-sm-3 left-move">
                         <span class="titleEmpDown">Nazwisko:</span>
-                        <input type="text" class="form-control" formControlName="lastName">
+                        <input type="text" class="form-control" formControlName="lastName"
+                        [ngClass]="{'red-warn':validators('lastName')===true , 'green-warn':validators('lastName')===false}">
                     </div>
 
                     <div class="col-sm-4 left-move">
                         <span class="titleEmpDown">Email:</span>
-                        <input type="text" class="form-control" formControlName="email">
+                        <input type="text" class="form-control" formControlName="email"
+                        [ngClass]="{'red-warn':validators('email')===true , 'green-warn':validators('email')===false}">
                     </div>
                     
                     <div class="col-sm-2 left-move">
@@ -93,25 +96,27 @@
             <form [formGroup]="passwordForm" >                
                 <div class="col-sm-4 left-move">
                     <span class="titleEmpDown">Stare hasło:</span>
-                    <input type="text" class="form-control" formControlName="passwordOld">
+                    <input type="password" class="form-control" formControlName="passwordOld">
                 </div>
 
                 <div class="col-sm-4 left-move">
                     <span class="titleEmpDown">Nowe hasło:</span>
-                    <input type="text" class="form-control" formControlName="password">
+                    <input type="password" class="form-control" formControlName="password"
+                    [ngClass]="{'red-warn':validators('password')===true , 'green-warn':validators('password')===false}">
                 </div>
 
                 <div class="col-sm-4 left-move">
                     <span class="titleEmpDown">Powtórz stare hasło:</span>
-                    <input type="text" class="form-control" formControlName="passwordOldSecond">
+                    <input type="password" class="form-control" formControlName="passwordOldSecond" >
                 </div>
 
                 <div class="col-sm-4 left-move">
                     <span class="titleEmpDown">Powtórz nowe hasło:</span>
-                    <input type="text" class="form-control" formControlName="passwordSecond">
+                    <input type="password" class="form-control" formControlName="passwordSecond"
+                    [ngClass]="{'red-warn':validators('passwordSecond')===true , 'green-warn':validators('passwordSecond')===false}">
                 </div>
 
-                <button (click)="changePassword()" [disabled]="!isActive()"  class="btn btn-primary ">
+                <button (click)="changePassword()" [disabled]="!isActive() && !strong(passwordForm.controls['password'].value) && !strong(passwordForm.controls['passwordSecond'].value)"  class="btn btn-primary ">
                     Zmień hasło
                 </button> 
             </form>  

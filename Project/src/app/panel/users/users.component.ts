@@ -93,15 +93,32 @@ export class UsersComponent implements OnInit {
             this.main.setMessage('Pomyślnie usunięto użytkownika','good');
           }
           else
-            this.main.setMessage('PNie udało się usunąć użytkownika','bad');
+            this.main.setMessage('Nie udało się usunąć użytkownika','bad');
           
         });
        }
     }  
   }
 
+  setAdmin(id:any, status:number){
+    this.service.setAdmin(id).subscribe((data:any)=>{
+      if(data.responseCode == 1){
+        this.ngOnInit()
+        if(status == 1) this.main.setMessage('Pomyślnie dodano uprawnienia','good');
+        if(status == 2) this.main.setMessage('Pomyślnie zabrano uprawnienia','good');
+      }
+      else
+        this.main.setMessage('Nie odnaleziono użytkownika','bad');
+    })
+  }
+
   getPosition(){
     const user = JSON.parse(localStorage.getItem("userInfo"));
     return user.position;
+  }
+
+  ifAdmin(){
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+    return user.isAdmin;
   }
 }

@@ -110,7 +110,8 @@ namespace WebAPI3.Controllers
         [HttpPost]
         public async Task<ResponseModel> PostMeting([FromBody] MetingDto model)
         {
-
+            if(checkMeet(model.IdTeacher, model.DateStart, model.DateEnd))
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Nauczyciel jest zajęty", null));
             Metings meting = new Metings();
             meting.Title = model.Title;
             meting.Description = model.Description;
@@ -178,6 +179,26 @@ namespace WebAPI3.Controllers
             {
                 return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
             }
+        }
+
+        private bool checkMeet(string Id, DateTime start, DateTime end)
+        {
+            var listMeeting = (from m in _context.Meting
+                             join c in _context.Connectors on m.Id equals c.IdMessage
+                             select new {c.IdTeacher, m.DateStart, m.DateEnd}).Distinct().AsEnumerable();
+            listMeeting = listMeeting.Where(x => x.IdTeacher.ToString() == Id);
+
+            foreach (var item in listMeeting)
+            {
+                if (item.DateStart <= start && item.DateEnd > start) return true;
+                else if(item.DateStart > start)
+                {
+                    if (item.DateStart >= start && item.DateStart <= end) return true;
+                    if (item.DateStart <= end && item.DateEnd >= end) return true;
+                }
+            }
+
+            return false;
         }
     }
 }

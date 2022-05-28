@@ -12,6 +12,11 @@ export class AntyPlagiatComponent implements OnInit {
   files: File[] = [];
   text: Array<string> = [];
   active:boolean;
+  textOne:string[] = [];
+  textSecond:string[] = [];
+  matrix: Array<string> = [];
+  counter = 0;
+  splited = /[., "/n"„\r\n\”]/;
 
   closeResult: string='';
   
@@ -42,28 +47,10 @@ export class AntyPlagiatComponent implements OnInit {
   }
 
   antyPlagiatSystem(){
-    this.startLoader();
-    
-
     this.active = true;
     for(let f of this.files){
       this.addText(f);
     }
-
-    this.stopLoader();
-  }
-
-  startLoader(){
-    var showAddSucces = document.getElementById('loader');
-    if(showAddSucces)
-      showAddSucces.style.display = "inline";
-  }
-
-  stopLoader(){
-    setTimeout(this.stopLoader, 400);
-    var showAddSucces = document.getElementById('loader');
-    if(showAddSucces)
-      showAddSucces.style.display = "none";
   }
 
   addText(file:File){
@@ -82,4 +69,5 @@ export class AntyPlagiatComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem("userInfo"));
     return user.position;
   }
+
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ajj+vGYGSNZ54v1aVcXJB/WXDonlWNrlIwIdNVDSP34PYmnf7sdpqhfEx+ZeR63IPnhMzAw/hz5hWuFl8GavUA==",
+  "dgSpecHash": "ESoKrn+hJ/me/FSu628+PipPZXyWS+Mzw8UpsgTiE6wFPFXY4KmSOhRmtDhznoc70XEPtHL2qQ8j1ZHCU02sPA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Artur\\Desktop\\Praca Licencjacka\\PracaLicencjacka\\WorkAPI\\WebAPI3\\WebAPI3.csproj",
+  "projectFilePath": "C:\\Users\\Artur\\Desktop\\Nowy folder (3)\\Praca Licencjacka\\PracaLicencjacka\\WorkAPI\\WebAPI3\\WebAPI3.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Artur\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Artur\\.nuget\\packages\\messagepack\\2.1.152\\messagepack.2.1.152.nupkg.sha512",

@@ -29,7 +29,7 @@ import { ShowTextComponent } from './panel/anty-plagiat/show-text/show-text.comp
 import { SettingComponent } from './panel/setting/setting.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { ShowMeetingComponent } from './panel/meeting/show-meeting/show-meeting.component';
-import { SchedulerComponent } from './panel/meeting/scheduler/scheduler.component';
+import { SchedulerComponent } from './panel/meeting/add-meet/scheduler/scheduler.component';
 import { Router, RouterModule } from '@angular/router';
 
 

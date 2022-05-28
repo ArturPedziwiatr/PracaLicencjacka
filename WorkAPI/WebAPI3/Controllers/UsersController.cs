@@ -43,7 +43,7 @@ namespace WebAPI3.Controllers
                     {
                         if (VerifyPasswordHash(model.Password, user.PasswordHash, user.PasswordSalt))
                         {
-                            var response = new LoginBack(user.Id, user.FirstName,user.LastName,user.Pesel,user.Position,user.Sex,user.Email,user.PhotoFile,CreateToken(user));
+                            var response = new LoginBack(user.Id, user.FirstName,user.LastName,user.Pesel,user.Position,user.Sex,user.Email,user.PhotoFile,CreateToken(user),user.isAdmin);
                             return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Użytkownik zalogowany", response));
                         }
                         else
@@ -65,6 +65,13 @@ namespace WebAPI3.Controllers
         [HttpPost]
         public async Task<ResponseModel> PostUsers(UserDto model)
         {
+            if (!checkUnique("email", model.Email))
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Użytkownik z podanym adresem email juz istnieje", null));
+            if (!checkUnique("pesel", model.Pesel))
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Użytkownik z podanym peslem juz istnieje", null));
+            if (!checkUnique("idCard", model.IdCard))
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Użytkownik z podanym numerem albumu juz istnieje", null));
+
             CreatePasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
             Teachers teachers = new Teachers();
             Users user = new Users();
@@ -76,7 +83,7 @@ namespace WebAPI3.Controllers
             user.Position = model.Position;
             user.Sex = model.Sex;
             user.Login = model.Username;
-            user.IdCard = model.IdCard;
+            user.IdCard =  model.IdCard;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             if (user.Position == "T")
@@ -107,7 +114,7 @@ namespace WebAPI3.Controllers
             }
             catch (Exception ex)
             {
-                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Użytkownik nie został dodany", null));
             }
         }
 
@@ -225,6 +232,14 @@ namespace WebAPI3.Controllers
         public async Task<ResponseModel> PutUsers(Guid id, [FromBody] UserDto model)
         {
             var userUpdate = _context.User.FirstOrDefault(x => x.Id == id);
+
+            if (!checkUnique("email", model.Email) && userUpdate.Email != model.Email)
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Użytkownik z podanym adresem email juz istnieje", null));
+            if (!checkUnique("pesel", model.Pesel) && userUpdate.Pesel != model.Pesel)
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Użytkownik z podanym peslem juz istnieje", null));
+            if (!checkUnique("idCard", model.IdCard) && userUpdate.IdCard != model.IdCard)
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Użytkownik z podanym numerem albumu juz istnieje", null));
+ 
             if (userUpdate != null)
             {
                 userUpdate.PhotoFile = model.PhotoFile;
@@ -257,6 +272,10 @@ namespace WebAPI3.Controllers
         public async Task<ResponseModel> PutBasicUsers(Guid id, [FromBody] UserBasic model)
         {
             var userUpdate = _context.User.FirstOrDefault(x => x.Id == id);
+
+            if (!checkUnique("email", model.Email) && userUpdate.Email != model.Email)
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, "Użytkownik z podanym adresem email juz istnieje", null));
+
             if (userUpdate != null)
             {
                 userUpdate.FirstName = model.FirstName;
@@ -275,9 +294,8 @@ namespace WebAPI3.Controllers
             }
         }
 
-            //Metoda put przyjmuje id użytkownika oraz nazwę zdjęcia,
-            //oraz edytuje zdjęcie profilowe
-            [HttpPut("admin/{id}")]
+
+        [HttpPut("admin/{id}")]
         public async Task<ResponseModel> ChangeAdmin(Guid id)
         {
             var user = await _context.User.FindAsync(id);
@@ -295,6 +313,31 @@ namespace WebAPI3.Controllers
             catch (Exception ex)
             {
                 return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message, null));
+            }
+        }
+
+        [HttpGet("card")]
+        public async Task<ResponseModel> generateIdcard()
+        {
+            var generate = "";
+            var max = 0;
+            var condition = true; 
+
+            try
+            {
+                while (condition)
+                {
+                    generate = "" + max;
+                    generate = generate.PadLeft(6, '0');
+                    if (_context.User.FirstOrDefault(x => x.IdCard == generate) == null) condition = false;
+                    else max++;
+                }
+                
+                return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Wygenerowano kod", generate));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new ResponseModel(ResponseCode.Error, ex.Message , null));
             }
         }
 
@@ -367,6 +410,27 @@ namespace WebAPI3.Controllers
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwtToken;
+        }
+
+        private Boolean checkUnique(string position, string value)
+        {
+
+            if (position == "email")
+            {
+                var user = _context.User.FirstOrDefault(x => (x.Email == value));
+                if (user == null) return true;
+            }
+            else if (position == "pesel")
+            {
+                var user = _context.User.FirstOrDefault(x => (x.Pesel == value));
+                if (user == null) return true;
+            }
+            else if (position == "idCard")
+            {
+                var user = _context.User.FirstOrDefault(x => (x.IdCard == value));
+                if (user == null) return true;
+            }
+            return false;
         }
     }
 }

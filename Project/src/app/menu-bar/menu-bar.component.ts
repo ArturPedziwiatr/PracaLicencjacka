@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router} from '@angular/router';
+import { Component,  OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SharedService } from '../services/shared.service';
 
 @Component({
@@ -8,8 +8,8 @@ import { SharedService } from '../services/shared.service';
   styleUrls: ['./menu-bar.component.css']
 })
 export class MenuBarComponent implements OnInit {
-
-  constructor(private service: SharedService, private router:Router) { }
+  constructor(private service: SharedService, private router:Router) { 
+  }
 
   active:number = 1;
   ngOnInit(): void {
@@ -19,6 +19,12 @@ export class MenuBarComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem("userInfo"));
     if(user == null) return 'U';
     return user.position;
+  }
+
+  ifAdmin(){
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+    if(user == null) return false;
+    return user.isAdmin;
   }
 
   changeSide(side:string){
@@ -50,4 +56,6 @@ export class MenuBarComponent implements OnInit {
     }
     this.router.navigate([side]);
   }
+
+  
 }

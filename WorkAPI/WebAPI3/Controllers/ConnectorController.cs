@@ -70,9 +70,6 @@ namespace WebAPI3.Controllers
                                  select new {c.IdMessage,u.FirstName, u.LastName, u.IdCard }).AsEnumerable();
                 connector = connector.Where(x => x.IdMessage == id);
 
-                /*var userList = (from c in connector
-                                join u in _context.User on c.IdStudent equals u.Id
-                                select new { u.FirstName, u.LastName, u.IdCard }).AsEnumerable();*/
                 return await Task.FromResult(new ResponseModel(ResponseCode.OK, "Spotkanie zostało odnalezione", connector));
             }
             catch (Exception ex)

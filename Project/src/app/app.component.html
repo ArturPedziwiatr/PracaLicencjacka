@@ -9,17 +9,17 @@
 </ng-template>
 
 <div class="panel">
+    <div class="alert alert-success" role="alert" id="update-success">
+      {{textMessage}}
+    </div>
+    
+    <div class="alert alert-danger" role="alert" id="update-fail">
+        {{textMessage}}
+    </div>
     <div class="menuVertical">
         <app-menu-bar></app-menu-bar>
     </div>
     <div class="activity">
-        <div class="alert alert-success" role="alert" id="update-success">
-          {{textMessage}}
-        </div>
-        
-        <div class="alert alert-danger" role="alert" id="update-fail">
-            {{textMessage}}
-        </div>
         
         <div class="signInBtn" *ngIf="!isUserLogin">
             <button  class="btn btn-outline-primary mb-2 mr-2" 

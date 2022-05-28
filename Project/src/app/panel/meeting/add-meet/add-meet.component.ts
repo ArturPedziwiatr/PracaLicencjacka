@@ -82,11 +82,11 @@ export class AddMeetComponent implements OnInit {
     var dateEnd  =  this.meetingForm.controls["date"].value.toString() + "T" + this.meetingForm.controls["timeEnd"].value.toString() + ":00.000Z";
     this.idList.push(this.getId());
 
-    this.service.addMeet(this.meetingForm.controls["title"].value,this.meetingForm.controls["description"].value,dateStart,dateEnd,false).subscribe((data:any)=>{
+    this.service.addMeet(this.idUser,this.meetingForm.controls["title"].value,this.meetingForm.controls["description"].value,dateStart,dateEnd,false).subscribe((data:any)=>{
       if(data.responseCode == 1){
         this.service.addConnector(this.idUser,this.idList,data.dateSet).subscribe((res:any)=>{
-          this.show.ngOnInit();
           if(res.responseCode == 1){
+            this.show.ngOnInit();
             this.main.setMessage("Pomyślnie poproszono o spotkanie",'good'); 
           }
           else if(res.responseCode == 2)
@@ -95,7 +95,7 @@ export class AddMeetComponent implements OnInit {
         })
       }
       else if(data.responseCode == 2)
-        this.main.setMessage("Niepoprawne dane spotkania",'bad');
+        this.main.setMessage(data.responseMesage,'bad');
     })
   }
 
@@ -106,19 +106,20 @@ export class AddMeetComponent implements OnInit {
     for(let list of this.secondList){
       this.idList.push(list.id);
     }
-      this.service.addMeet(this.meetingForm.controls["title"].value,this.meetingForm.controls["description"].value,dateStart,dateEnd,true).subscribe((data:any)=>{
-        this.show.ngOnInit();
+      this.service.addMeet(this.getId(),this.meetingForm.controls["title"].value,this.meetingForm.controls["description"].value,dateStart,dateEnd,true).subscribe((data:any)=>{
         if(data.responseCode == 1){
           this.service.addConnector(this.getId(),this.idList,data.dateSet).subscribe((res:any)=>{
-            if(res.responseCode == 1)
+            if(res.responseCode == 1){
+              this.show.ngOnInit();
               this.main.setMessage("Spotkanie zostało utworzone",'good');
+            }
             else if(res.responseCode == 2)
               this.main.setMessage("Spotkanie nie zostało utworzone",'bad');
             else alert("Błąd bazy");
           })
         }
         else if(data.responseCode == 2)
-          this.main.setMessage("Błędne dane spotkania",'bad');
+          this.main.setMessage(data.responseMesage,'bad');
       })
   }
 
@@ -133,5 +134,48 @@ export class AddMeetComponent implements OnInit {
   getId(){
     const user = JSON.parse(localStorage.getItem("userInfo"));
     return user.id;
+  }
+
+  validators(name:string){
+    if(this.meetingForm.controls[name].invalid) return true
+    switch(name){
+      case 'date':
+        if(this.checkDate()) return true;
+        break;
+      case 'timeStart':
+        if(this.checkTime("timeStart")) return true;
+        break;
+      case 'timeEnd':
+        if(this.checkTime("timeEnd")) return true;
+        break;
+    }
+    return false
+  }
+
+  checkDate(){
+    let today = new Date().toISOString().substring(0,10);
+    if(this.meetingForm.controls["date"].value.toString() < today) return true
+    else return false;
+  }
+
+  checkTime(name:string){
+    let date = new Date().toISOString().substring(0,10);
+    let time = new Date().toTimeString().substring(0,5);
+
+    if(name=="timeEnd")
+      if(this.meetingForm.controls["timeStart"].value >= this.meetingForm.controls["timeEnd"].value) return true;
+    if(this.meetingForm.controls["date"].value.toString() < date) return true
+    else if(this.meetingForm.controls["date"].value.toString() == date)
+      if(this.meetingForm.controls[name].value.toString() < time) return true
+
+    return false;
+  }
+
+  ifDisabled(){
+    if(!this.meetingForm.valid) return true;
+    else if(this.checkDate()) return true
+    else if(this.checkTime("timeStart")) return true;
+    else if(this.checkTime("timeEnd")) return true;
+    else return false
   }
 }

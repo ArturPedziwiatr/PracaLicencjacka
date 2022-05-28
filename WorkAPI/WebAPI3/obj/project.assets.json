@@ -9810,11 +9810,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Artur\\Desktop\\Praca Licencjacka\\PracaLicencjacka\\WorkAPI\\WebAPI3\\WebAPI3.csproj",
+      "projectUniqueName": "C:\\Users\\Artur\\Desktop\\Nowy folder (3)\\Praca Licencjacka\\PracaLicencjacka\\WorkAPI\\WebAPI3\\WebAPI3.csproj",
       "projectName": "WebAPI3",
-      "projectPath": "C:\\Users\\Artur\\Desktop\\Praca Licencjacka\\PracaLicencjacka\\WorkAPI\\WebAPI3\\WebAPI3.csproj",
+      "projectPath": "C:\\Users\\Artur\\Desktop\\Nowy folder (3)\\Praca Licencjacka\\PracaLicencjacka\\WorkAPI\\WebAPI3\\WebAPI3.csproj",
       "packagesPath": "C:\\Users\\Artur\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Artur\\Desktop\\Praca Licencjacka\\PracaLicencjacka\\WorkAPI\\WebAPI3\\obj\\",
+      "outputPath": "C:\\Users\\Artur\\Desktop\\Nowy folder (3)\\Praca Licencjacka\\PracaLicencjacka\\WorkAPI\\WebAPI3\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

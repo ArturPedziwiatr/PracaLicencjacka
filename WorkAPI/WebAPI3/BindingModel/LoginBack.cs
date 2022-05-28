@@ -4,7 +4,7 @@ namespace WebAPI3.BindingModel
 {
     public class LoginBack
     {
-        public LoginBack(Guid id, string firstName, string lastName, string pesel, string position, string sex, string email,string photoFile, string token)
+        public LoginBack(Guid id, string firstName, string lastName, string pesel, string position, string sex, string email,string photoFile, string token, bool isAdmin)
         {
             Id = id;
             FirstName = firstName;
@@ -15,6 +15,7 @@ namespace WebAPI3.BindingModel
             Email = email;
             PhotoFile = photoFile;
             Token = token;
+            IsAdmin = isAdmin;
         }
         public Guid Id { get; set; }
         public string FirstName { get; set; }
@@ -25,5 +26,6 @@ namespace WebAPI3.BindingModel
         public string Email { get; set; }
         public string PhotoFile { get; set; }
         public string Token { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

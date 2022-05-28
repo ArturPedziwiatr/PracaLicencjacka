@@ -45,7 +45,7 @@
     <!--Uzupełnianie danych - Tworzenie spotkania-->
     <div *ngIf="screen == 1">
         <div class="panelTitle">
-            Dane spotkania {{dateStart}}
+            Dane spotkania 
         </div>
         <br>
         <div class="container-forms">
@@ -53,34 +53,39 @@
                 <div class="col-sm-10">
                     <span class="titleEmpDown">Tytuł spotkania:</span>
                     <input type="text" class="form-control" formControlName="title"
+                    [ngClass]="{'red-warn':validators('title')===true , 'green-warn':validators('title')===false}"
                     placeholder="Temat">
                 </div>
         
                 <div class="col-sm-10">
                     <span class="titleEmp">Opis:</span>
                     <textarea class="form-control" formControlName="description"
+                    [ngClass]="{'red-warn':validators('description')===true , 'green-warn':validators('description')===false}"
                     placeholder="Opis" rows="3"></textarea>
                 </div>
 
                 <div class="col-sm-10">
                     <span class="titleEmp">Data:</span>
                     <input type="date" class="form-control" formControlName="date"
+                    [ngClass]="{'red-warn':validators('date')===true , 'green-warn':validators('date')===false}"
                     placeholder="Opis">
                 </div>
 
                 <div class="col-sm-4 fl-l1">
                     <span class="titleEmp">Czas start:</span>
                     <input type="time" class="form-control" formControlName="timeStart"
+                    [ngClass]="{'red-warn':validators('timeStart')===true , 'green-warn':validators('timeStart')===false}"
                     placeholder="Opis">
                 </div>
 
                 <div class="col-sm-4 fl-l1">
                     <span class="titleEmp">Czas koniec:</span>
                     <input type="time" class="form-control" formControlName="timeEnd"
+                    [ngClass]="{'red-warn':validators('timeEnd')===true , 'green-warn':validators('timeEnd')===false}"
                     placeholder="Opis">
                 </div>
             </form> 
-            <button (click)="addMeetingS()" [disabled]="!meetingForm.valid" class="btn btn-primary btn-dodaj">
+            <button (click)="addMeetingS()" [disabled]="ifDisabled()" class="btn btn-primary btn-dodaj">
                 Dodaj
             </button>
 
@@ -162,7 +167,7 @@
     <!--Uzupełnianie danych - Tworzenie spotkania-->
     <div *ngIf="screen == 1">
         <div class="panelTitle">
-            Dane spotkania {{dateStart}}
+            Dane spotkania 
         </div>
         <br>
         <div class="container-forms">
@@ -170,35 +175,40 @@
                 <div class="col-sm-10">
                     <span class="titleEmpDown">Tytuł spotkania:</span>
                     <input type="text" class="form-control" formControlName="title"
+                    [ngClass]="{'red-warn':validators('title')===true , 'green-warn':validators('title')===false}"
                     placeholder="Temat">
                 </div>
         
                 <div class="col-sm-10">
                     <span class="titleEmp">Opis:</span>
                     <textarea class="form-control" formControlName="description"
+                    [ngClass]="{'red-warn':validators('description')===true , 'green-warn':validators('description')===false}"
                     placeholder="Opis" rows="3"></textarea>
                 </div>
     
                 <div class="col-sm-10">
                     <span class="titleEmp">Data:</span>
                     <input type="date" class="form-control" formControlName="date"
+                    [ngClass]="{'red-warn':validators('date')===true , 'green-warn':validators('date')===false}"
                     placeholder="Opis">
                 </div>
     
                 <div class="col-sm-4 fl-l1">
                     <span class="titleEmp">Czas start:</span>
                     <input type="time" class="form-control" formControlName="timeStart"
+                    [ngClass]="{'red-warn':validators('timeStart')===true , 'green-warn':validators('timeStart')===false}"
                     placeholder="Opis">
                 </div>
     
                 <div class="col-sm-4 fl-l1">
                     <span class="titleEmp">Czas koniec:</span>
                     <input type="time" class="form-control" formControlName="timeEnd"
+                    [ngClass]="{'red-warn':validators('timeEnd')===true , 'green-warn':validators('timeEnd')===false}"
                     placeholder="Opis">
                 </div>
             </form> 
             
-            <button (click)="addMeetingT()" [disabled]="!meetingForm.valid" class="btn btn-primary btn-dodaj">
+            <button (click)="addMeetingT()" [disabled]="ifDisabled()" class="btn btn-primary btn-dodaj">
                 Dodaj
             </button>
     
